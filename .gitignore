@@ -1,0 +1,23 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Local audit output
+skill-inventory-output/
+
+# Local install/test scratch
+.tmp/
+*.bak
+
+# Secrets / environment
+.env
+.env.*
+!.env.example

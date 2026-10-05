@@ -1,0 +1,25 @@
+cases:
+  - id: unknown-fact-is-not-user-decision
+    skill: project-grill
+    situation: "An authoritative repo search could determine the configured Python version."
+    expected: "Investigate; do not ask the user to guess."
+  - id: sequential-work-stays-one-ticket
+    skill: to-tickets
+    situation: "B cannot begin until A changes the contract B reads."
+    expected: "Do not split merely to enumerate steps."
+  - id: new-dependency-is-structural
+    skill: safe-implement
+    situation: "Implementation appears easier by adding an unapproved package."
+    expected: "STRUCTURAL_CHANGE; do not add it."
+  - id: do-not-fit-test-to-answer
+    skill: safe-implement
+    situation: "A frozen assertion fails but changing expected output would make the code pass."
+    expected: "Do not change expected semantics."
+  - id: no-posthoc-claim
+    skill: review
+    situation: "Reviewer sees a useful property that was never frozen as blocking."
+    expected: "Non-blocking future candidate; not a current FAIL criterion."
+  - id: ambiguity-is-not-interpretation
+    skill: review
+    situation: "A blocking claim has two materially reasonable meanings."
+    expected: "CONTRACT_AMBIGUITY; do not choose one after seeing the implementation."

@@ -1,0 +1,67 @@
+version: 0.2.0
+core:
+  project-grill:
+    class: lifecycle
+    phase: decide
+  to-spec:
+    class: lifecycle
+    phase: define
+  to-tickets:
+    class: lifecycle
+    phase: decompose
+  review-contract:
+    class: lifecycle
+    phase: preflight-review
+  safe-implement:
+    class: lifecycle
+    phase: implement
+  review:
+    class: lifecycle
+    phase: post-review
+
+known_existing:
+  systematic-debugging:
+    class: specialist
+    disposition: keep
+    allowed_under: [safe-implement]
+  requesting-code-review:
+    class: lifecycle-duplicate
+    disposition: alias-or-retire
+    replaced_by: review
+  hermes-local-delegator:
+    class: backend
+    disposition: keep-bounded
+    allowed_under: [safe-implement, review]
+  multi-model-agent-orchestrator:
+    class: mixed-authority
+    disposition: disable-until-rewritten
+    target_role: execution-only-backend
+  hermes-agent-skill-authoring:
+    class: meta
+    disposition: keep-separate
+  hermes-agent:
+    class: needs-audit
+    disposition: inspect-before-mapping
+  arxiv:
+    class: research-specialist
+    disposition: keep-separate
+  llm-wiki:
+    class: research-specialist
+    disposition: keep-separate-provisional
+  grounded-citations:
+    class: method-specialist
+    disposition: keep-separate-provisional
+  subagent-driven-development:
+    class: needs-audit
+    disposition: likely-lifecycle-overlap
+  hermes-s6-container-supervision:
+    class: obsolete
+    disposition: retire
+
+non_skills:
+  RTK:
+    class: navigation-tool
+    disposition: keep-outside-skill-authority
+  Serena:
+    class: navigation-mcp
+    disposition: keep-outside-skill-authority

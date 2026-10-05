@@ -1,0 +1,19 @@
+cases:
+  - id: grill-material-decision
+    prompt: "We need to redesign the CAN backend, but compatibility and supported adapters are undecided. Help me decide the requirements first."
+    expected_skill: project-grill
+  - id: freeze-spec
+    prompt: "The decisions are settled. Turn them into an implementation-neutral specification and acceptance claims."
+    expected_skill: to-spec
+  - id: expose-parallel-work
+    prompt: "Split this frozen spec into tickets only where work can run safely in parallel."
+    expected_skill: to-tickets
+  - id: preimplementation-review
+    prompt: "Independently review this ticket graph and freeze the acceptance contract before anyone implements it."
+    expected_skill: review-contract
+  - id: bounded-implementation
+    prompt: "Implement Ticket T3 exactly inside its frozen boundary and prepare candidate evidence."
+    expected_skill: safe-implement
+  - id: postimplementation-grade
+    prompt: "Review this implementation only against the already frozen review contract."
+    expected_skill: review
