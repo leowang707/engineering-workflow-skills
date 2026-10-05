@@ -73,7 +73,7 @@ Recommended repository name:
 engineering-workflow-skills
 ```
 
-A private repository is a sensible default while the workflow and existing-skill migration are still being validated. This repository should be the authoritative source. Do not edit installed copies under `~/.codex/skills` as the primary development workflow.
+A private repository is a sensible default while the workflow and existing-skill migration are still being validated. This repository should be the authoritative source. Do not edit installed copies under `~/.agents/skills` as the primary development workflow.
 
 After manually creating the empty GitHub repository:
 
@@ -111,16 +111,18 @@ VALIDATION=PASS version=0.2.0 skills=6/6
 
 ## Install into Codex user scope
 
-Codex supports user-scoped skills under `~/.codex/skills/<skill>/SKILL.md`. The installer copies only the six workflow skills and does not delete unrelated existing skills.
+Codex supports user-scoped skills under `~/.agents/skills/<skill>/SKILL.md`. The installer copies only the six workflow skills and does not delete unrelated existing skills.
 
 ```bash
 ./scripts/install-codex-user.sh
 ```
 
-If `CODEX_HOME` is customized, the scripts honor it:
+The default user-scope target is `~/.agents/skills`.
+
+For staging or testing without touching the live user-scope directory, override the target explicitly:
 
 ```bash
-CODEX_HOME=/custom/codex/home ./scripts/install-codex-user.sh
+TARGET_SKILLS_HOME=/tmp/engineering-workflow-skills ./scripts/install-codex-user.sh
 ```
 
 Installation model:
@@ -128,7 +130,7 @@ Installation model:
 ```text
 Git repository (authoritative)
         ↓ explicit install
-~/.codex/skills/ (installed runtime view)
+~/.agents/skills/ (installed runtime view)
         ↓
 Codex CLI
 ```
@@ -140,7 +142,7 @@ The installer:
 3. backs up an existing skill with the same name;
 4. installs only the six managed skills;
 5. verifies `SKILL.md` hashes;
-6. records an install manifest under `~/.codex/.engineering-workflow-skills/`.
+6. records an install manifest under `~/.local/state/engineering-workflow-skills/`.
 
 It does **not** use a destructive `rsync --delete` against the whole skills directory.
 
@@ -177,7 +179,7 @@ This intentionally separates source updates from active Codex installation.
 ./scripts/uninstall-codex-user.sh
 ```
 
-The uninstaller removes only managed skills whose installed `SKILL.md` still matches the recorded installation hash. A locally modified installed skill is skipped rather than deleted. Backups are retained under `~/.codex/.engineering-workflow-skills/backups/`.
+The uninstaller removes only managed skills whose installed `SKILL.md` still matches the recorded installation hash. A locally modified installed skill is skipped rather than deleted. Backups are retained under `~/.local/state/engineering-workflow-skills/backups/`.
 
 ## Existing Codex skills
 
