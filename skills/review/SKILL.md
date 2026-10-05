@@ -40,5 +40,11 @@ Preserve proven unaffected results.
 
 Complete only when every frozen blocking criterion has a disposition and no unresolved contract ambiguity remains.
 
-Return per-criterion dispositions and findings.
-The overall Ticket result is derived from them; do not override it.
+Derive the overall result from the dispositions:
+1. any blocking `FAIL` -> `FAIL`;
+2. else any blocking `BLOCKED` -> `BLOCKED`;
+3. else any blocking `INSUFFICIENT_EVIDENCE` -> `INSUFFICIENT_EVIDENCE`;
+4. else any non-blocking finding -> `PASS_WITH_FINDINGS`;
+5. else -> `PASS`.
+
+Do not override this aggregation.

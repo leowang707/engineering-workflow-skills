@@ -19,6 +19,15 @@ First validate:
 - shared preparation classification;
 - whether parallel value materially exceeds introduced overhead.
 
+Phase 1 is a hard gate.
+
+If structure is rejected for an affected subgraph:
+- stop review of that subgraph;
+- do not perform Contract Review for it;
+- return the structural findings.
+
+Contract Review may begin only for structure-approved subgraphs.
+
 Only then validate:
 - minimal complete local Claims;
 - Claim ownership and relationships;

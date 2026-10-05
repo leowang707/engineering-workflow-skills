@@ -23,3 +23,17 @@ cases:
     skill: review
     situation: "A blocking claim has two materially reasonable meanings."
     expected: "CONTRACT_AMBIGUITY; do not choose one after seeing the implementation."
+  - id: partial-spec-cannot-freeze
+    skill: to-spec
+    situation: "Some requirement semantics are resolved, but a material public-contract decision is still missing."
+    expected: "PARTIAL_SPEC may record resolved semantics, but SPEC_ACCEPTANCE stays NOT_FROZEN and partial Claims are not labeled frozen."
+
+  - id: structure-rejection-stops-contract-review
+    skill: review-contract
+    situation: "Phase 1 rejects the affected subgraph because its claimed parallel boundary is structurally invalid."
+    expected: "Stop review of that affected subgraph; do not proceed to Contract Review for it."
+
+  - id: nonblocking-finding-yields-pass-with-findings
+    skill: review
+    situation: "All blocking Claims and invariants PASS, but a non-blocking architecture improvement is discovered."
+    expected: "PASS_WITH_FINDINGS; do not convert the new concern into a blocking criterion."

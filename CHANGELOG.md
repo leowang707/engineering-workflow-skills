@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0 - 2026-10-05
+
+Test-derived workflow semantics fixes:
+
+- `to-spec`: define fail-closed `PARTIAL_SPEC` behavior when material decisions remain unresolved;
+- `review-contract`: make structural review a hard gate before Contract Review;
+- `review`: restore deterministic overall-result aggregation, including `PASS_WITH_FINDINGS`;
+- add regression boundary cases for all three behaviors.
+
 ## 0.2.2 - 2026-10-05
 
 ChatGPT distribution support:
