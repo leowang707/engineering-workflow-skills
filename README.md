@@ -89,8 +89,8 @@ git add .
 git commit -m "feat: add six-skill engineering workflow kernel"
 git branch -M main
 git push -u origin main
-git tag -a v0.2.0 -m "Engineering workflow skills v0.2.0"
-git push origin v0.2.0
+git tag -a v0.2.1 -m "Engineering workflow skills v0.2.1"
+git push origin v0.2.1
 ```
 
 If you created the GitHub repository with a generated README, `.gitignore`, or license, pull/reconcile that initial commit before pushing instead of force-pushing over it.
@@ -106,7 +106,7 @@ Before installation:
 Expected result:
 
 ```text
-VALIDATION=PASS version=0.2.0 skills=6/6
+VALIDATION=PASS version=0.2.1 skills=6/6
 ```
 
 ## Install into Codex user scope
@@ -224,7 +224,7 @@ Do not maintain a separate ChatGPT copy of the skill semantics. The files under 
 Current version:
 
 ```text
-0.2.0
+0.2.1
 ```
 
 Suggested convention:
