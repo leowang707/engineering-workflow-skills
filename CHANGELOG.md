@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2 - 2026-10-05
+
+ChatGPT distribution support:
+
+- add a GitHub-backed plugin marketplace manifest;
+- allow the six core lifecycle Skills to be imported into ChatGPT from the authoritative repository;
+- no lifecycle Skill semantics changed.
+
 ## 0.2.1 — 2026-10-05
 
 Distribution-only correction:

@@ -215,9 +215,38 @@ Do not duplicate the six `SKILL.md` files inside `AGENTS.md`. Use `adapters/code
 
 ## ChatGPT
 
-The `skills/` directory is also packaged as an instruction-only plugin via the root `plugin.json`. For early manual validation in a ChatGPT Project, the six `SKILL.md` files can be added as Project sources and `adapters/chatgpt-project-instructions.md` used as the thin router.
+The repository root is a skills-only plugin package. The six lifecycle Skills under `skills/` remain the authoritative source.
 
-Do not maintain a separate ChatGPT copy of the skill semantics. The files under `skills/` are the source of truth.
+### GitHub marketplace import
+
+This repository includes:
+
+```text
+.agents/plugins/marketplace.json
+```
+
+For an eligible ChatGPT workspace:
+
+1. Open Workspace settings > Plugins.
+2. Select Add > Import marketplace.
+3. Use this repository as the Source:
+
+   `https://github.com/leowang707/engineering-workflow-skills`
+
+4. Leave Path empty.
+5. Choose a branch, tag, or commit.
+6. Import the marketplace.
+7. Configure and install `engineering-workflow-skills`.
+
+For controlled releases, prefer a release tag instead of tracking `main`.
+
+### Project fallback
+
+If marketplace import is unavailable, create a ChatGPT Project, add the six `SKILL.md` files as Project sources, and use `adapters/chatgpt-project-instructions.md` as the Project instructions.
+
+This fallback provides the workflow context but is not native Skill discovery.
+
+Do not maintain a separate ChatGPT copy of the Skill semantics.
 
 ## Versioning
 
