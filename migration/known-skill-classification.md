@@ -6,7 +6,7 @@ This matrix is **provisional**. It contains only skills/components established b
 |---|---|---|---|---|
 | systematic-debugging | Debugging method | SPECIALIST | KEEP | None; operates under `safe-implement` |
 | requesting-code-review | Code review workflow | LIFECYCLE_DUPLICATE | ALIAS_OR_RETIRE | Replaced by `review` |
-| hermes-local-delegator | Bounded delegated execution | BACKEND | KEEP_BOUNDED | None; callable under `safe-implement` / evidence acquisition in `review` |
+| hermes-local-delegator | Bounded delegated execution | BACKEND | REMOVE_FROM_CODEX_INTEGRATION | Independent installation may remain |
 | multi-model-agent-orchestrator | Mixed planning/delegation/review authority | MIXED_AUTHORITY | DISABLE_UNTIL_REWRITTEN | Rewrite only as execution backend if still needed |
 | hermes-agent-skill-authoring | Skill authoring | META | KEEP_SEPARATE | None |
 | hermes-agent | Broad Hermes agent workflow | NEEDS_AUDIT | INSPECT | Must not duplicate lifecycle authority |
@@ -25,8 +25,8 @@ This matrix is **provisional**. It contains only skills/components established b
 | github-maintenance | Repository operations | OPERATOR | KEEP_SEPARATE | Requires explicit authorization policy; no lifecycle authority |
 | cron-watchdog | Operations monitoring | OPERATOR | KEEP_SEPARATE | None |
 | ollama-cloud-provider | Provider/backend integration | BACKEND | KEEP_SEPARATE | None |
-| RTK | Command-output/navigation tool, not a workflow skill | TOOL | KEEP_OUTSIDE_CORE | None |
-| Serena | Navigation MCP/tool, not a workflow skill | TOOL | KEEP_OUTSIDE_CORE | None |
+| RTK | Command-output/navigation tool, not a workflow skill | TOOL | REMOVE_CODEX_ROUTING_KEEP_BINARY | None |
+| Serena | Navigation MCP/tool, not a workflow skill | TOOL | PROJECT_OPT_IN_READ_ONLY | Navigation/evidence only |
 
 ## Classification rule
 

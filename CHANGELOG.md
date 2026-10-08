@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0 - 2026-10-08
+
+- Add multi-surface framework infrastructure, durable YAML StateStores, exact provenance and review projections.
+- Add role/capability boundaries, selective invalidation, Git isolation and authorized progression.
+- Add explicit distribution payloads and staged migration support; preserve all six kernel bytes.
+- Device runtime migration and release publication remain separately authorized operations.
+
 ## 0.3.0 - 2026-10-05
 
 Test-derived workflow semantics fixes:

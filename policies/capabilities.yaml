@@ -1,0 +1,15 @@
+schema_version: 1
+providers:
+  native-files:
+    origin: native
+    properties: [read-files, write-files, sha256, durable-project-artifacts]
+    modes: [project-scoped]
+  native-shell:
+    origin: native
+    properties: [shell, git, isolated-process, read-files]
+    modes: [sandboxed]
+  serena:
+    origin: third-party
+    properties: [symbols, references, readonly]
+    modes: [project-read-only]
+verification: Runtime probe required for actual provider, version, mode and requested properties. A declaration grants neither eligibility nor authority.

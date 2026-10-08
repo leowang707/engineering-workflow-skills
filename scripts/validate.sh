@@ -50,3 +50,23 @@ if errors:
     raise SystemExit(1)
 print(f"VALIDATION=PASS version={version} skills={len(expected)}/{len(expected)}")
 PY
+
+cd "$ROOT"
+export PYTHONDONTWRITEBYTECODE=1
+export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
+python3 -B - <<'PY'
+import json
+from pathlib import Path
+from framework.common import sha
+from framework.state import ARTIFACT_SCHEMA, REF_SCHEMA
+root = Path('.')
+assert json.loads((root/'schemas/artifact-v1.schema.json').read_text()) == ARTIFACT_SCHEMA
+assert json.loads((root/'schemas/reference-v1.schema.json').read_text()) == REF_SCHEMA
+for name, expected in json.loads((root/'policies/kernel-hashes.json').read_text()).items():
+    assert sha((root/name).read_bytes()) == expected, name
+assert (root/'VERSION').read_text().strip() == json.loads((root/'plugin.json').read_text())['version'] == '0.4.0'
+print('SOURCE_IDENTITIES=VERIFIED')
+PY
+FIXTURE_ROOT="$(mktemp -d /tmp/ews-framework-validation.XXXXXXXX)"
+python3 -B -m pytest -q -p no:cacheprovider --basetemp="$FIXTURE_ROOT" tests/test_framework.py
+sha256sum -c SHA256SUMS

@@ -1,0 +1,8 @@
+profile: hybrid_engineering
+native_baseline: true
+custom_allowed: []
+framework_default:
+  repository: engineering-workflow-skills
+  release: 0.4.0
+  commit: REPLACE_WITH_EXACT_ACCEPTED_COMMIT
+preferences: [native-files, native-shell]

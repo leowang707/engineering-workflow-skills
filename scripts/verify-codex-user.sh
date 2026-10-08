@@ -1,44 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-TARGET_SKILLS_HOME="${TARGET_SKILLS_HOME:-$HOME/.agents/skills}"
-
-SKILLS=(
-  project-grill
-  to-spec
-  to-tickets
-  review-contract
-  safe-implement
-  review
-)
-
-fail=0
-
-for skill in "${SKILLS[@]}"; do
-  src="$ROOT/skills/$skill/SKILL.md"
-  dst="$TARGET_SKILLS_HOME/$skill/SKILL.md"
-
-  if [[ ! -f "$dst" ]]; then
-    echo "MISSING=$skill"
-    fail=1
-    continue
-  fi
-
-  a="$(sha256sum "$src" | awk '{print $1}')"
-  b="$(sha256sum "$dst" | awk '{print $1}')"
-
-  if [[ "$a" == "$b" ]]; then
-    echo "OK=$skill"
-  else
-    echo "DRIFT=$skill"
-    fail=1
-  fi
-done
-
-if [[ "$fail" -ne 0 ]]; then
-  echo "VERIFY=FAIL"
-  exit 1
-fi
-
-echo "VERIFY=PASS skills=6/6"
+: "${TARGET_FRAMEWORK_HOME:?Set the explicit distribution directory}"
+cd "$ROOT"
+python3 -B - "$TARGET_FRAMEWORK_HOME" <<'PYTHON'
+import json,sys
+from pathlib import Path
+from framework.common import require,sha
+root=Path(sys.argv[1]).resolve()
+manifest=json.loads((root/'distribution.json').read_text())
+require(manifest['release']=='0.4.0',detail='release mismatch')
+for name,expected in manifest['payload_sha256'].items():
+    p=root/name
+    require(p.resolve().is_relative_to(root) and not p.is_symlink(),detail='unsafe payload path')
+    require(sha(p.read_bytes())==expected,detail='payload drift: '+name)
+print('DISTRIBUTION_VERIFIED=YES')
+PYTHON

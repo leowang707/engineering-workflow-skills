@@ -1,0 +1,47 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "artifact_type": {
+      "enum": [
+        "terminal-history",
+        "phase-result",
+        "decisions",
+        "authorization",
+        "spec",
+        "graph",
+        "ticket",
+        "integration",
+        "structure-review",
+        "contract",
+        "integration-contract",
+        "mapping",
+        "implementation-evidence",
+        "review-evidence",
+        "review-result",
+        "execution",
+        "runtime-validation",
+        "migration",
+        "integration-receipt"
+      ]
+    },
+    "artifact_version": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "work_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "work_id",
+    "artifact_type",
+    "artifact_version",
+    "sha256"
+  ],
+  "type": "object"
+}

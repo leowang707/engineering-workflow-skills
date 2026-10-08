@@ -1,4 +1,4 @@
-version: 0.2.0
+version: 0.4.0
 core:
   project-grill:
     class: lifecycle
@@ -30,8 +30,7 @@ known_existing:
     replaced_by: review
   hermes-local-delegator:
     class: backend
-    disposition: keep-bounded
-    allowed_under: [safe-implement, review]
+    disposition: remove-from-codex-integration
   multi-model-agent-orchestrator:
     class: mixed-authority
     disposition: disable-until-rewritten
@@ -61,7 +60,7 @@ known_existing:
 non_skills:
   RTK:
     class: navigation-tool
-    disposition: keep-outside-skill-authority
+    disposition: remove-codex-routing-keep-independent-binary
   Serena:
     class: navigation-mcp
-    disposition: keep-outside-skill-authority
+    disposition: project-opt-in-read-only

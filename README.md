@@ -1,275 +1,70 @@
 # Engineering Workflow Skills
 
-A compact six-skill workflow kernel for ChatGPT and Codex. The skills separate decision making, specification, parallel work decomposition, pre-implementation acceptance review, bounded implementation, and post-implementation review so that implementation cannot silently rewrite its own requirements or grading standard.
+Version 0.4.0 combines six unchanged lifecycle kernels with a multi-surface
+execution framework, durable lifecycle state and deterministic review infrastructure.
 
-## Workflow
+The six phases are project-grill, to-spec, to-tickets, review-contract,
+safe-implement and review. They alone own decisions, semantics, decomposition,
+contracts, bounded implementation and formal grading respectively.
 
-```text
-project-grill
-    ↓
-to-spec
-    ↓
-to-tickets
-    ↓
-review-contract
-    ↓
-safe-implement
-    ↓
-review
+| Profile | Chat | Codex |
+|---|---|---|
+| hybrid_engineering | project-grill, to-spec | to-tickets, review-contract, safe-implement, review |
+| chat_engineering_full | all six | none |
+| none | none | none |
+
+No runtime fallback changes these surfaces. Codex consumes an exact durable Frozen
+Spec and may persist its bytes mechanically. Descriptive evidence or conversation
+history cannot substitute for that handoff.
+
+## Validate source
+
+Use Python 3.12 with PyYAML, jsonschema and pytest already installed:
+
+```sh
+scripts/validate.sh
 ```
 
-| Skill | Authority |
-|---|---|
-| `project-grill` | Resolve material user decisions; retrieve facts from evidence. |
-| `to-spec` | Freeze implementation-neutral requirement semantics. |
-| `to-tickets` | Expose separate Tickets only where decomposition creates safe, useful parallel work. |
-| `review-contract` | Independently validate decomposition and freeze the acceptance contract before implementation. |
-| `safe-implement` | Choose implementation mechanisms only inside the frozen Ticket boundary. |
-| `review` | Independently grade against standards frozen before implementation. |
+This validates source, schemas, release identities, kernel hashes and isolated
+positive/negative behavior. It does not perform formal lifecycle grading or certify
+Device A. Tests write only to a temporary fixture root; no installation is needed.
 
-The six lifecycle skills own workflow authority. Existing debugging, research, delegation, navigation, and tool skills remain specialist capabilities beneath the appropriate lifecycle phase; they must not redefine frozen decisions, requirements, Ticket boundaries, review contracts, or PASS criteria.
+## Build an explicit distribution
 
-## Repository layout
-
-```text
-engineering-workflow-skills/
-├── README.md
-├── VERSION
-├── CHANGELOG.md
-├── plugin.json
-├── skill-registry.yaml
-├── skills/
-│   ├── project-grill/SKILL.md
-│   ├── to-spec/SKILL.md
-│   ├── to-tickets/SKILL.md
-│   ├── review-contract/SKILL.md
-│   ├── safe-implement/SKILL.md
-│   └── review/SKILL.md
-├── adapters/
-│   ├── chatgpt-project-instructions.md
-│   └── codex-agents-snippet.md
-├── references/
-│   └── specialist-boundary.md
-├── scripts/
-│   ├── validate.sh
-│   ├── install-codex-user.sh
-│   ├── update-codex-user.sh
-│   ├── verify-codex-user.sh
-│   ├── uninstall-codex-user.sh
-│   └── audit_existing_skills.py
-├── migration/
-│   ├── MIGRATION_PLAN.md
-│   └── known-skill-classification.md
-└── tests/
-    ├── activation_cases.yaml
-    └── boundary_cases.yaml
+```sh
+python3 -B -m framework build-distribution --source . --destination /tmp/ews-chat-0.4.0 --profile hybrid_engineering --surface Chat
+TARGET_FRAMEWORK_HOME=/tmp/ews-codex-0.4.0 scripts/install-codex-user.sh
+TARGET_FRAMEWORK_HOME=/tmp/ews-codex-0.4.0 scripts/verify-codex-user.sh
 ```
 
-## Recommended GitHub setup
-
-Recommended repository name:
-
-```text
-engineering-workflow-skills
-```
-
-A private repository is a sensible default while the workflow and existing-skill migration are still being validated. This repository should be the authoritative source. Do not edit installed copies under `~/.agents/skills` as the primary development workflow.
-
-After manually creating the empty GitHub repository:
-
-```bash
-git clone git@github.com:<YOUR_GITHUB_USER>/engineering-workflow-skills.git
-cd engineering-workflow-skills
-```
-
-Copy this repository's files into the clone, then:
-
-```bash
-git add .
-git commit -m "feat: add six-skill engineering workflow kernel"
-git branch -M main
-git push -u origin main
-git tag -a v0.3.0 -m "Engineering workflow skills v0.3.0"
-git push origin v0.3.0
-```
-
-If you created the GitHub repository with a generated README, `.gitignore`, or license, pull/reconcile that initial commit before pushing instead of force-pushing over it.
-
-## Validate the repository
-
-Before installation:
-
-```bash
-./scripts/validate.sh
-```
-
-Expected result:
-
-```text
-VALIDATION=PASS version=0.3.0 skills=6/6
-```
-
-## Install into Codex user scope
-
-Codex supports user-scoped skills under `~/.agents/skills/<skill>/SKILL.md`. The installer copies only the six workflow skills and does not delete unrelated existing skills.
-
-```bash
-./scripts/install-codex-user.sh
-```
-
-The default user-scope target is `~/.agents/skills`.
-
-For staging or testing without touching the live user-scope directory, override the target explicitly:
-
-```bash
-TARGET_SKILLS_HOME=/tmp/engineering-workflow-skills ./scripts/install-codex-user.sh
-```
-
-Installation model:
-
-```text
-Git repository (authoritative)
-        ↓ explicit install
-~/.agents/skills/ (installed runtime view)
-        ↓
-Codex CLI
-```
-
-The installer:
-
-1. validates the repository;
-2. creates the Codex skills directory if necessary;
-3. backs up an existing skill with the same name;
-4. installs only the six managed skills;
-5. verifies `SKILL.md` hashes;
-6. records an install manifest under `~/.local/state/engineering-workflow-skills/`.
-
-It does **not** use a destructive `rsync --delete` against the whole skills directory.
-
-## Verify an installation
-
-```bash
-./scripts/verify-codex-user.sh
-```
-
-Expected result:
-
-```text
-VERIFY=PASS skills=6/6
-```
-
-This checks that the installed `SKILL.md` files match the current Git checkout.
-
-## Update
-
-Update the authoritative checkout first, inspect the change, then explicitly deploy it:
-
-```bash
-git pull --ff-only
-./scripts/validate.sh
-./scripts/update-codex-user.sh
-./scripts/verify-codex-user.sh
-```
-
-This intentionally separates source updates from active Codex installation.
-
-## Uninstall
-
-```bash
-./scripts/uninstall-codex-user.sh
-```
-
-The uninstaller removes only managed skills whose installed `SKILL.md` still matches the recorded installation hash. A locally modified installed skill is skipped rather than deleted. Backups are retained under `~/.local/state/engineering-workflow-skills/backups/`.
-
-## Existing Codex skills
-
-Do not bulk-disable or delete existing skills when installing this workflow. First inventory them:
-
-```bash
-python3 scripts/audit_existing_skills.py \
-  --repo /path/to/current/repository \
-  --out ./skill-inventory-output
-```
-
-Then classify each existing skill as one of:
-
-- lifecycle duplicate/conflict;
-- specialist method;
-- execution/backend skill;
-- meta/skill-authoring skill;
-- obsolete.
-
-See:
-
-- `migration/known-skill-classification.md`
-- `migration/MIGRATION_PLAN.md`
-- `references/specialist-boundary.md`
-
-The core rule is:
-
-> The six workflow skills own lifecycle decisions. Specialist skills may decide how to perform their specialty, but may not reopen resolved decisions, alter `SPEC_ACCEPTANCE`, change Ticket boundaries, change a Frozen Review Contract, create a new blocking criterion, or declare overall PASS.
-
-## Codex `AGENTS.md`
-
-Do not duplicate the six `SKILL.md` files inside `AGENTS.md`. Use `adapters/codex-agents-snippet.md` as a thin routing/policy layer and keep repository-specific facts, commands, hardware constraints, branch policy, and authoritative-document pointers in the repository's own `AGENTS.md`.
-
-## ChatGPT
-
-The repository root is a skills-only plugin package. The six lifecycle Skills under `skills/` remain the authoritative source.
-
-### GitHub marketplace import
-
-This repository includes:
-
-```text
-.agents/plugins/marketplace.json
-```
-
-For an eligible ChatGPT workspace:
-
-1. Open Workspace settings > Plugins.
-2. Select Add > Import marketplace.
-3. Use this repository as the Source:
-
-   `https://github.com/leowang707/engineering-workflow-skills`
-
-4. Leave Path empty.
-5. Choose a branch, tag, or commit.
-6. Import the marketplace.
-7. Configure and install `engineering-workflow-skills`.
-
-For controlled releases, prefer a release tag instead of tracking `main`.
-
-### Project fallback
-
-If marketplace import is unavailable, create a ChatGPT Project, add the six `SKILL.md` files as Project sources, and use `adapters/chatgpt-project-instructions.md` as the Project instructions.
-
-This fallback provides the workflow context but is not native Skill discovery.
-
-Do not maintain a separate ChatGPT copy of the Skill semantics.
-
-## Versioning
-
-Current version:
-
-```text
-0.3.0
-```
-
-Suggested convention:
-
-- patch: wording, documentation, or non-semantic corrections;
-- minor: behavior/authority semantics change while preserving the six-phase model;
-- major: breaking workflow or artifact-contract changes.
-
-Keep version metadata at repository/package level rather than bloating each `SKILL.md`.
-
-## Security and repository hygiene
-
-Do not commit credentials, Codex authentication files, SSH keys, `.env` files, machine-specific secrets, or generated skill inventories containing sensitive local paths unless intentionally reviewed.
-
-The repository contains instruction-only workflow skills and maintenance helpers. Installation does not require modifying Codex source code.
-
-## License
-
-No license is included yet. If this repository is public, choose and add a license deliberately before treating the contents as reusable by others.
+Destinations must be new and explicit. These commands assemble a payload; they do
+not register plugins, change routing or activate runtime configuration. The source
+repository retains all six kernels; each payload references that same semantic
+source and includes only the profile's enabled surface subset.
+
+The update helper builds into another new explicit destination. The uninstall
+helper removes only receipt-listed files after verifying their hashes, retaining
+unrelated files. Active-runtime migration requires its own accepted transaction.
+
+## Infrastructure
+
+- `framework/`: authority, capability, execution, persistence, review, Git and progression APIs.
+- `schemas/`: versioned YAML-artifact/reference JSON schemas.
+- `policies/`: project policy, eligibility registry and stable role contracts.
+- `references/framework.md`: API contracts, failure semantics and operator boundaries.
+- `tests/test_framework.py`: behavioral source evidence.
+- `migration/`: staged deployment and recovery support without active-runtime mutation.
+- `adapters/`: thin surface instructions; never copied lifecycle semantics.
+
+Read [the framework contract](references/framework.md) for exact identities,
+StateStore APIs, authorization, schema pinning, migration, selective invalidation,
+review evidence and terminal history. Read [migration support](migration/MIGRATION_PLAN.md)
+before any separately authorized deployment.
+
+Native capabilities are baseline-allowed. Custom capabilities require project
+opt-in and actual runtime eligibility verification. Opt-in does not create a hard
+dependency or grant lifecycle authority. Exact model assignments belong in local
+execution policy and are recorded as provenance, outside lifecycle semantics.
+
+Publishing, tagging, pushing and remote merging require separate authorization.
+All six kernel bytes retain compatibility with the reviewed pre-v0.4.0 source.

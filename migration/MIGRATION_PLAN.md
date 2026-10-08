@@ -1,12 +1,33 @@
-# Migration Plan
+# v0.4.0 migration support
 
-1. Install the six core lifecycle skills without removing existing skills.
-2. Add the small ChatGPT/Codex router adapter; do not copy full Skill procedures into Project Instructions or `AGENTS.md`.
-3. Run the read-only inventory scanner on the actual Codex host.
-4. Classify every discovered skill as lifecycle, specialist, backend/operator, meta, obsolete, or needs-audit.
-5. Resolve lifecycle conflicts first.
-6. Add `allowed_under` mappings only where they materially constrain authority.
-7. Run activation and boundary cases.
-8. Only after acceptance, alias/disable/retire conflicting or obsolete skills.
+This is framework-source guidance. Runtime migration belongs to a separately
+accepted Device A execution; source validation cannot establish its seal.
 
-Never bulk-delete existing skills from the known-but-incomplete inventory.
+1. Freeze and back up the known-good state; demonstrate recoverability.
+2. Establish the accepted exact v0.4.0 framework without runtime behavior changes.
+3. Normalize the lifecycle distribution and profile/surface split.
+4. Migrate to root, codex_explorer, codex_fast_worker and codex_complex_worker roles.
+5. Remove Hermes routing, hermes-local-delegator, hermes_reviewer and RTK routing
+   from Codex integration. Preserve unrelated system installations.
+6. Make Serena project-opt-in, read-only, navigation/evidence-only.
+7. Validate coexistence, durable state, hybrid lifecycle, parallel isolation,
+   fresh review and per-phase rollback on the actual runtime.
+8. Seal only when every frozen R74 condition has current admissible evidence.
+
+Each phase needs exact prior/next state identities, explicit phase authorization,
+verified recovery material, a tested restoration procedure, post-change evidence
+and independent acceptance. Failed or unresolved gates stop the sequence. Never
+use long-term dual-router coexistence as the target or declare a seal from files
+alone. Do not add a router Skill, Atlas, repo-mapper or another router.
+
+`framework.delivery.migration_next` validates the stage sequence and receipt gates.
+It neither changes Device A nor fabricates recovery or acceptance results.
+`DISPOSITIONS` records the framework target. Keep the six kernels, bounded
+review-agent evidence support, openai-docs and native specialists. A specialist's
+severity or no-findings report never substitutes for formal review.
+
+Existing personal-plugin metadata must converge to the accepted source release
+and surface payload. Build into a new explicit directory, verify its manifest,
+and use the Device-specific accepted migration transaction to activate it.
+Updates must preserve old accepted payload/recovery identities until verified
+integration and any required remote operations are complete.

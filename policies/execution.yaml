@@ -1,0 +1,15 @@
+version: 1
+router: codex-native
+roles:
+  root: [coordinate, persist, route, integrate, remote, review]
+  codex_explorer: [read]
+  codex_fast_worker: [read, implement, candidate]
+  codex_complex_worker: [read, implement, candidate]
+validation:
+  session_start: full
+  per_use: config_hash
+  drift: revalidate
+  fail_or_unknown: ineligible
+escalation: one fast-to-complex transition with unchanged frozen boundary
+formal_review: fresh independent root context; no implementer reasoning/history
+resources: Device-local model and effort assignments; recorded per execution, never lifecycle semantics.

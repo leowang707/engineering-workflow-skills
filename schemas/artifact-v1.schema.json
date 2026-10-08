@@ -1,0 +1,650 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "terminal-history"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "integration": {}
+            },
+            "required": [
+              "integration"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "phase-result"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "phase": {},
+              "status": {}
+            },
+            "required": [
+              "phase",
+              "status"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "decisions"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "decisions": {},
+              "material_unknowns": {},
+              "resolved": {}
+            },
+            "required": [
+              "resolved",
+              "material_unknowns",
+              "decisions"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "authorization"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "phases": {},
+              "remote": {},
+              "withdrawn": {}
+            },
+            "required": [
+              "phases",
+              "withdrawn",
+              "remote"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "spec"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "acceptance": {},
+              "authority": {},
+              "semantics": {}
+            },
+            "required": [
+              "acceptance",
+              "authority",
+              "semantics"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "graph"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "dependencies": {},
+              "responsibilities": {},
+              "tickets": {}
+            },
+            "required": [
+              "responsibilities",
+              "tickets",
+              "dependencies"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "ticket"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "claims": {},
+              "dependencies": {},
+              "frozen": {},
+              "scope": {},
+              "ticket_id": {}
+            },
+            "required": [
+              "ticket_id",
+              "scope",
+              "claims",
+              "dependencies",
+              "frozen"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "integration"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "claims": {},
+              "dependencies": {},
+              "owner": {},
+              "scope": {}
+            },
+            "required": [
+              "owner",
+              "claims",
+              "dependencies",
+              "scope"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "structure-review"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "graph_ref": {},
+              "status": {}
+            },
+            "required": [
+              "status",
+              "graph_ref"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "contract"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "claims": {},
+              "frozen_before_implementation": {},
+              "invariants": {},
+              "owner": {},
+              "preconditions": {},
+              "status": {}
+            },
+            "required": [
+              "owner",
+              "claims",
+              "invariants",
+              "preconditions",
+              "status",
+              "frozen_before_implementation"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "integration-contract"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "claims": {},
+              "frozen_before_implementation": {},
+              "invariants": {},
+              "owner": {},
+              "preconditions": {},
+              "status": {}
+            },
+            "required": [
+              "owner",
+              "claims",
+              "invariants",
+              "preconditions",
+              "status",
+              "frozen_before_implementation"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "mapping"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "locators": {},
+              "responsibilities": {}
+            },
+            "required": [
+              "responsibilities",
+              "locators"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "implementation-evidence"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "candidate": {},
+              "claims": {},
+              "conditions": {},
+              "dependencies": {},
+              "observations": {},
+              "scope": {},
+              "strength": {}
+            },
+            "required": [
+              "candidate",
+              "claims",
+              "dependencies",
+              "observations",
+              "conditions",
+              "strength",
+              "scope"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "review-evidence"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "candidate": {},
+              "claims": {},
+              "conditions": {},
+              "dependencies": {},
+              "observations": {},
+              "scope": {},
+              "strength": {}
+            },
+            "required": [
+              "candidate",
+              "claims",
+              "dependencies",
+              "observations",
+              "conditions",
+              "strength",
+              "scope"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "review-result"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "candidate": {},
+              "context": {},
+              "dispositions": {},
+              "evidence": {},
+              "owner": {},
+              "reuse": {}
+            },
+            "required": [
+              "owner",
+              "dispositions",
+              "evidence",
+              "candidate",
+              "context",
+              "reuse"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "execution"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "candidate": {},
+              "config_hash": {},
+              "context": {},
+              "effort": {},
+              "model": {},
+              "role": {},
+              "runtime": {},
+              "validations": {}
+            },
+            "required": [
+              "candidate",
+              "validations",
+              "role",
+              "model",
+              "effort",
+              "runtime",
+              "config_hash",
+              "context"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "runtime-validation"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "conditions": {},
+              "kind": {},
+              "observed_at": {},
+              "status": {},
+              "subject": {}
+            },
+            "required": [
+              "kind",
+              "status",
+              "subject",
+              "conditions",
+              "observed_at"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "migration"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "affected": {},
+              "comparison": {},
+              "new_pins": {},
+              "old_pins": {},
+              "revalidated": {},
+              "successful": {}
+            },
+            "required": [
+              "old_pins",
+              "new_pins",
+              "comparison",
+              "affected",
+              "revalidated",
+              "successful"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "integration-receipt"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "candidate": {},
+              "provenance": {},
+              "target": {},
+              "verified": {}
+            },
+            "required": [
+              "target",
+              "candidate",
+              "provenance",
+              "verified"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "artifact_type": {
+      "enum": [
+        "terminal-history",
+        "phase-result",
+        "decisions",
+        "authorization",
+        "spec",
+        "graph",
+        "ticket",
+        "integration",
+        "structure-review",
+        "contract",
+        "integration-contract",
+        "mapping",
+        "implementation-evidence",
+        "review-evidence",
+        "review-result",
+        "execution",
+        "runtime-validation",
+        "migration",
+        "integration-receipt"
+      ]
+    },
+    "artifact_version": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "bindings": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "artifact_type": {
+            "enum": [
+              "terminal-history",
+              "phase-result",
+              "decisions",
+              "authorization",
+              "spec",
+              "graph",
+              "ticket",
+              "integration",
+              "structure-review",
+              "contract",
+              "integration-contract",
+              "mapping",
+              "implementation-evidence",
+              "review-evidence",
+              "review-result",
+              "execution",
+              "runtime-validation",
+              "migration",
+              "integration-receipt"
+            ]
+          },
+          "artifact_version": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "sha256": {
+            "pattern": "^[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "work_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "work_id",
+          "artifact_type",
+          "artifact_version",
+          "sha256"
+        ],
+        "type": "object"
+      },
+      "type": "object"
+    },
+    "payload": {
+      "type": "object"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "work_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "work_id",
+    "artifact_type",
+    "artifact_version",
+    "bindings",
+    "payload"
+  ],
+  "type": "object"
+}
