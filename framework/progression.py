@@ -69,25 +69,31 @@ def derive_current(store):
     require(structure["payload"]["graph_ref"] == bindings["graph"], detail="stale structure review")
     if structure["payload"]["status"] != "APPROVED":
         return stop("REVIEW_CONTRACT_REJECTED")
-    all_claims, dispositions = [], {}
+    all_claims, dispositions, local = [], {}, {}
     for ticket_id in tickets:
         ticket_key = f"ticket:{ticket_id}"
         contract_key = f"contract:{ticket_id}"
+        require(set(artifacts[ticket_key]["payload"]["dependencies"]) == set(graph["payload"]["dependencies"][ticket_id]),
+                detail="Ticket/graph dependency mismatch")
         if contract_key not in artifacts:
-            return ready("review-contract")
+            local[ticket_id] = {"phase": "review-contract", "accepted": False}
+            continue
         contract = artifacts[contract_key]
         require(contract["bindings"].get("ticket") == bindings[ticket_key], detail="stale local contract")
         cp = contract["payload"]
         if cp["status"] not in {"APPROVED", "CONDITIONALLY_APPROVED"} or not cp["frozen_before_implementation"]:
-            return stop("REVIEW_CONTRACT_REJECTED")
+            local[ticket_id] = {"stop": "REVIEW_CONTRACT_REJECTED", "accepted": False}
+            continue
         evidence_key = f"implementation-evidence:{ticket_id}"
         if evidence_key not in artifacts:
-            return ready("safe-implement")
+            local[ticket_id] = {"phase": "safe-implement", "accepted": False}
+            continue
         evidence = artifacts[evidence_key]
         require(evidence["bindings"].get("contract") == bindings[contract_key], detail="stale implementation evidence")
         result_key = f"review-result:{ticket_id}"
         if result_key not in artifacts:
-            return ready("review")
+            local[ticket_id] = {"phase": "review", "accepted": False}
+            continue
         result = artifacts[result_key]
         require(result["bindings"].get("contract") == bindings[contract_key]
                 and result["payload"]["candidate"] == evidence["payload"]["candidate"], detail="stale reviewed candidate/contract")
@@ -95,6 +101,20 @@ def derive_current(store):
         require(set(result["payload"]["dispositions"]) == set(claims), detail="incomplete local review")
         all_claims.extend(claims)
         dispositions.update(result["payload"]["dispositions"])
+        local[ticket_id] = {"accepted": all(s == "PASS" for s in result["payload"]["dispositions"].values())}
+    # Gather every prerequisite's current outcome before selecting work. An
+    # unrelated parallel branch remains eligible even when another branch fails.
+    def accepted(ticket_id):
+        return local[ticket_id]["accepted"] and all(accepted(parent) for parent in graph["payload"]["dependencies"][ticket_id])
+    for ticket_id in tickets:
+        pending = local[ticket_id].get("phase")
+        if pending and (pending == "review-contract" or
+                        all(accepted(parent) for parent in graph["payload"]["dependencies"][ticket_id])):
+            return ready(pending)
+    if not all(state["accepted"] for state in local.values()):
+        reasons = set(dispositions.values()) | {state["stop"] for state in local.values() if "stop" in state}
+        return stop(next((s for s in ("REVIEW_CONTRACT_REJECTED", "CONTRACT_AMBIGUITY", "BLOCKED", "INSUFFICIENT_EVIDENCE", "FAIL")
+                          if s in reasons), "PARALLEL_BOUNDARY_BLOCKED"))
     # Explicit integration/aggregate owners are independent from Ticket-local artifacts.
     integration_owners = {n["owner"] for n in graph["payload"]["responsibilities"] if n["kind"] in {"integration", "aggregate"}}
     require(integration_owners <= {a["payload"]["owner"] for a in artifacts.values() if a["artifact_type"] == "integration"},

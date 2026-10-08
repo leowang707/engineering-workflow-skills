@@ -266,15 +266,24 @@ def prepare_review(store, *, contract_ref, ticket_ref, candidate, identity_regis
         packet = review_packet(store, contract_ref, ticket_ref, candidate, evidence_refs)
         ticket = store.read(ticket_ref)["payload"]
         for ref in evidence_refs:
-            evidence = store.read(ref)
-            if evidence["payload"]["candidate"] != candidate["id"]:
-                proof = (reuse or {}).get(ref["sha256"])
-                require(proof is not None, "EVIDENCE_REFERENCE_INVALID", "candidate mismatch without reuse proof")
-                reuse_evidence(store, ref, candidate["id"], proof)
-            for claim in contract["claims"]:
-                if claim["id"] in evidence["payload"]["claims"]:
+            try:
+                evidence = store.read(ref, {"contract": contract_ref})
+                require(evidence["artifact_type"] in {"implementation-evidence", "review-evidence"},
+                        "EVIDENCE_REFERENCE_INVALID", "not evidence")
+                claims = {claim["id"]: claim for claim in contract["claims"]}
+                cited = evidence["payload"]["claims"]
+                require(bool(cited) and set(cited) <= set(claims),
+                        "EVIDENCE_REFERENCE_INVALID", "evidence claims outside frozen contract")
+                if evidence["payload"]["candidate"] != candidate["id"]:
+                    proof = (reuse or {}).get(ref["sha256"])
+                    require(proof is not None, "EVIDENCE_REFERENCE_INVALID", "candidate mismatch without reuse proof")
+                    reuse_evidence(store, ref, candidate["id"], proof)
+                for claim_id in cited:
+                    claim = claims[claim_id]
                     evidence_resolve(store, ref, bindings={"contract": contract_ref},
                                      allowed_scope=ticket["scope"], requirement={"claim": claim["id"], "strengths": claim["strengths"]})
+            except (Blocked, KeyError, TypeError) as error:
+                raise Blocked("EVIDENCE_REFERENCE_INVALID", str(error)) from error
         packet["reuse_proofs"] = deepcopy(reuse or {})
         return packet
     except Blocked as error:

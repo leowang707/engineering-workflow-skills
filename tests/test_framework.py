@@ -18,6 +18,22 @@ from framework.delivery import distribution, migration_next, MIGRATION_STAGES
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# Keep the established validate.sh entry point covering the frozen remediation
+# regressions; their standalone file also supports economical targeted runs.
+from test_t01_remediation import (  # noqa: E402
+    remediation_store,
+    test_t01_git_process_interruption_restart,
+    test_t01_git_commit_failure_preserves_previous,
+    test_t01_git_surviving_ref_child_restart,
+    test_t01_git_unrelated_state_and_competing_ref,
+    test_t01_concurrent_writers_and_cas,
+    test_t01_integrity_never_repaired,
+    test_t01_interrupted_transaction_corruption_rejected,
+    test_t01_dependency_and_parallel_progression,
+    test_t01_exact_loaded_evidence_rejections,
+    test_t01_loaded_evidence_reuse_positive,
+)
+
 
 def frozen_invariants():
     return v.freeze_invariants({"preimplementation": True, "facts": {"bounded": True}},

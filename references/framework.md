@@ -39,11 +39,26 @@ keys, unsupported types, schema mismatches, incorrect references, hashes or pare
 bindings reject. SHA-256 covers the exact serialized bytes. References contain
 work ID, type, version and hash. A Git commit supplements this identity.
 
-Artifacts publish by fsynced exclusive link; index updates use a lock, fsynced
-rename and compare-and-swap. Existing versions are never overwritten. A failed
-Git publication leaves an uncommitted mismatch that blocks reads; an operator must
-resolve it explicitly, rather than the store silently repairing it. `.lock` is
-operational synchronization, not authoritative lifecycle state.
+Chat artifacts publish by fsynced exclusive link; index updates use a lock,
+fsynced rename and compare-and-swap. Existing versions are never overwritten.
+Git publication prepares durable objects and a single-path control commit using
+a private index, then writes a checksummed transaction record in Git metadata.
+An atomic ref compare-and-swap publishes the commit before projecting its bytes
+to the working file and real index. A repository-wide lock serializes cooperating
+writers and graph reads. Unrelated staged, unstaged and untracked content is
+preserved and never included in the control commit.
+Git subprocesses inherit the writer lock so a surviving ref-update child retains
+exclusion after its Python parent is killed; restart waits for that child before
+interpreting the transaction record.
+
+After process interruption, a new store instance validates the transaction's
+exact commit identities, parent, path, blob content, branch and old/new working
+and index values. It abandons an unpublished preparation or finishes a published
+projection. Concurrent ref changes are accepted only when commit ancestry and
+the exact affected path establish that disposition. Unknown or corrupted journal,
+artifact, index or ref state blocks without repair. Recovery never changes a
+published semantic artifact or advances the ref. Synchronization and transaction
+metadata are operational, not authoritative lifecycle content.
 
 `state.yaml` contains only work ID, framework/schema/policy pins and exact semantic
 artifact bindings. Runtime validations belong to individual execution/evidence
@@ -75,6 +90,12 @@ Review uses `IdentityRegistry`, exact durable execution attribution,
 `provenance_gate`, `independent_review`, `review_packet` and `evidence_resolve`.
 The packet is an ephemeral deterministic projection, never a new standard.
 Reviewers lazy-load exact evidence under frozen strength/scope requirements.
+Every loaded reference must bind the exact contract, cite only its member Claims,
+and meet each cited Claim's frozen strength and the Ticket's allowed scope.
+Invalid identity, hash, schema, binding, scope or strength retains
+`EVIDENCE_REFERENCE_INVALID` through the pre-grading entry point. Proven unaffected
+evidence reuse preserves the original candidate identity and requires an exact
+durable reuse proof.
 Blocking reviewer-acquired evidence must already exist durably before a result
 can cite it. Invariant applicability reads only preimplementation facts; semantic
 UNKNOWNs return upstream, runtime-only conditions resolve durably before mutation.
@@ -82,7 +103,10 @@ UNKNOWNs return upstream, runtime-only conditions resolve durably before mutatio
 `derive_current` is the production read-only eligibility entry point; it reloads
 durable authorization, pins, bindings and frozen outcomes. `sequence_current`
 invokes only an eligible phase on its authorized surface. It neither implements
-nor grades. The lower-level `derive` accepts an already resolved gate snapshot
+nor grades. Implementation/review eligibility requires accepted direct and
+transitive Ticket prerequisites; current failure, blocked or insufficient outcomes
+cannot be bypassed by missing dependent evidence. Unrelated authorized parallel
+work remains eligible. The lower-level `derive` accepts an already resolved gate snapshot
 for adapters and tests; such a snapshot is not authoritative persistent state.
 Completion is derived from the complete local and explicit integration Claim set.
 No additional global grading artifact is produced.

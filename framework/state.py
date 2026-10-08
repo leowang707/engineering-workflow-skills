@@ -13,6 +13,7 @@ import re
 from pathlib import Path
 import subprocess
 import tempfile
+import threading
 
 import jsonschema
 import yaml
@@ -341,24 +342,156 @@ class GitStateStore(ProjectStateStore):
         self.repo = Path(repository).resolve()
         self.work_id = identifier(work_id)
         self.root = self.repo / ".engineering" / self.work_id
+        self._mutex = threading.RLock()
+        self._lock_depth = 0
+        self._lock_fd = None
         require(self.git("branch", "--show-current") == f"work/{work_id}", "BLOCKED", "dedicated control branch required")
 
     def git(self, *args):
-        result = subprocess.run(["git", "-C", str(self.repo), *args], text=True, capture_output=True)
+        result = subprocess.run(["git", "-c", "core.fsync=all", "-c", "core.fsyncMethod=fsync",
+                                 "-C", str(self.repo), *args], text=True, capture_output=True,
+                                pass_fds=() if self._lock_fd is None else (self._lock_fd,))
         require(result.returncode == 0, detail=result.stderr.strip())
         return result.stdout.strip()
 
     @contextmanager
     def locked(self):
-        # Synchronization is operational Git metadata, never untracked source or
-        # authoritative lifecycle content that would contaminate integration.
-        path = Path(self.git("rev-parse", "--git-path", f"ews-state-lock-{self.work_id}"))
-        if not path.is_absolute():
-            path = self.repo / path
-        self.root.mkdir(parents=True, exist_ok=True)
-        with path.open("a+b") as lock:
-            fcntl.flock(lock, fcntl.LOCK_EX)
-            yield
+        # All work IDs/worktrees share the ref-writer lock. Nested graph reads
+        # retain one snapshot; a separate instance/process still takes flock.
+        with self._mutex:
+            if self._lock_depth:
+                self._lock_depth += 1
+                try:
+                    yield
+                finally:
+                    self._lock_depth -= 1
+                return
+            common = Path(self.git("rev-parse", "--git-common-dir"))
+            if not common.is_absolute():
+                common = self.repo / common
+            with (common / "ews-state.lock").open("a+b") as lock:
+                fcntl.flock(lock, fcntl.LOCK_EX)
+                self._lock_depth = 1
+                # A surviving ref-update child must keep restart readers out
+                # until its CAS has completed, even if this process is killed.
+                self._lock_fd = lock.fileno()
+                try:
+                    self._recover()
+                    yield
+                finally:
+                    self._lock_depth = 0
+                    self._lock_fd = None
+
+    def read(self, ref, expected_bindings=None, _seen=None):
+        with self.locked():
+            return super().read(ref, expected_bindings, _seen)
+
+    def index(self):
+        with self.locked():
+            return super().index()
+
+    def versions(self, kind):
+        with self.locked():
+            return super().versions(kind)
+
+    def _terminal(self):
+        with self.locked():
+            return super()._terminal()
+
+    def _journal_path(self):
+        path = Path(self.git("rev-parse", "--git-path", "ews-state-transaction.json"))
+        return path if path.is_absolute() else self.repo / path
+
+    def _blob(self, commit, relative):
+        entries = self.git("ls-tree", commit, "--", relative).splitlines()
+        if not entries:
+            return None, None
+        require(len(entries) == 1 and entries[0].split("\t")[1] == relative,
+                detail="transaction artifact locator")
+        mode, kind, blob = entries[0].split("\t")[0].split()
+        require(mode == "100644" and kind == "blob", detail="transaction artifact mode")
+        result = subprocess.run(["git", "-C", str(self.repo), "cat-file", "blob", blob], capture_output=True)
+        require(result.returncode == 0, detail="transaction blob unavailable")
+        hashed = subprocess.run(["git", "-C", str(self.repo), "hash-object", "--stdin"],
+                                input=result.stdout, capture_output=True)
+        require(hashed.returncode == 0 and hashed.stdout.decode().strip() == blob,
+                detail="transaction blob integrity")
+        return blob, result.stdout
+
+    def _projection(self, relative, old_blob, old_raw, new_blob, new_raw):
+        path = self.repo / relative
+        require(not any(p.is_symlink() for p in [path, *path.parents]), detail="symlink transaction path")
+        try:
+            raw = path.read_bytes() if path.exists() else None
+        except OSError as error:
+            raise Blocked("LIFECYCLE_STATE_INVALID", f"transaction working content unavailable: {error}") from error
+        require(raw in (old_raw, new_raw), detail="transaction working content corrupted")
+        entries = self.git("ls-files", "--stage", "--", relative).splitlines()
+        allowed = {f"100644 {blob} 0\t{relative}" for blob in (old_blob, new_blob) if blob is not None}
+        require((not entries and old_blob is None) or (len(entries) == 1 and entries[0] in allowed),
+                detail="transaction Git index corrupted")
+
+    def _recover(self):
+        """Complete only a verified prepared publication; never repair other drift."""
+        journal = self._journal_path()
+        if not journal.exists():
+            return
+        try:
+            require(not journal.is_symlink(), detail="symlink transaction journal")
+            record = json.loads(journal.read_bytes())
+            require(set(record) == {"transaction", "sha256"} and digest(record["transaction"]) == record["sha256"],
+                    detail="transaction journal integrity")
+            tx = record["transaction"]
+            require(set(tx) == {"old", "new", "relative", "work_id", "branch"}, detail="transaction journal fields")
+            work_id = identifier(tx["work_id"])
+            require(tx["branch"] == f"refs/heads/work/{work_id}"
+                    and self.git("symbolic-ref", "HEAD") == tx["branch"], detail="transaction branch drift")
+            for key in ("old", "new"):
+                require(isinstance(tx[key], str) and re.fullmatch(r"[a-f0-9]{40}|[a-f0-9]{64}", tx[key]),
+                        detail="transaction commit identity")
+                commit = subprocess.run(["git", "-C", str(self.repo), "cat-file", "commit", tx[key]], capture_output=True)
+                hashed = subprocess.run(["git", "-C", str(self.repo), "hash-object", "-t", "commit", "--stdin"],
+                                        input=commit.stdout, capture_output=True)
+                require(commit.returncode == 0 and hashed.returncode == 0 and hashed.stdout.decode().strip() == tx[key],
+                        detail="transaction commit integrity")
+            relative = tx["relative"]
+            parts = Path(relative).parts
+            require(relative == f".engineering/{work_id}/state.yaml" or
+                    (len(parts) == 4 and parts[:2] == (".engineering", work_id)
+                     and parts[2] in KINDS and re.fullmatch(r"[1-9][0-9]*\.yaml", parts[3])),
+                    detail="transaction mutation scope")
+            require(self.git("rev-list", "--parents", "-n", "1", tx["new"]).split() == [tx["new"], tx["old"]]
+                    and self.git("diff-tree", "--no-commit-id", "--name-only", "-r", tx["old"], tx["new"]) == relative,
+                    detail="transaction commit scope/parent")
+            old_blob, old_raw = self._blob(tx["old"], relative)
+            new_blob, new_raw = self._blob(tx["new"], relative)
+            require(new_blob is not None and (parts[-1] == "state.yaml" or old_blob is None),
+                    detail="transaction immutable publication")
+            self._projection(relative, old_blob, old_raw, new_blob, new_raw)
+            head = self.git("rev-parse", "HEAD")
+            published = head == tx["new"]
+            if head not in {tx["old"], tx["new"]}:
+                ancestry = subprocess.run(["git", "-C", str(self.repo), "merge-base", "--is-ancestor",
+                                           tx["new"], head], capture_output=True)
+                require(ancestry.returncode in {0, 1}, detail="transaction ancestry unavailable")
+                published = ancestry.returncode == 0
+                require(self._blob(head, relative) == ((new_blob, new_raw) if published else (old_blob, old_raw)),
+                        detail="transaction ref/content changed concurrently")
+            if published:
+                # Ref CAS is the publication point. Working files/index are a
+                # recoverable projection, checked before any completion write.
+                atomic(self.repo / relative, new_raw, immutable=False)
+                self.git("update-index", "--add", "--cacheinfo", f"100644,{new_blob},{relative}")
+            else:
+                # No working/index write occurs before CAS. Abandoning a
+                # prepared, unpublished commit must not hide unrelated drift.
+                self._projection(relative, old_blob, old_raw, old_blob, old_raw)
+            journal.unlink()
+            fsync_dir(journal.parent)
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            if isinstance(error, Blocked):
+                raise
+            raise Blocked("LIFECYCLE_STATE_INVALID", f"invalid transaction journal: {error}") from error
 
     def _read(self, path):
         raw = super()._read(path)
@@ -369,8 +502,31 @@ class GitStateStore(ProjectStateStore):
 
     def _publish(self, path, raw, immutable):
         require(self.git("branch", "--show-current") == f"work/{self.work_id}", "BLOCKED", "control branch drift")
-        require(not self.git("diff", "--cached", "--name-only") and not self.git("diff", "--name-only"), detail="Git store dirty tracked state")
-        super()._publish(path, raw, immutable)
         relative = path.relative_to(self.repo).as_posix()
-        self.git("add", "--", relative)
-        self.git("commit", "-m", f"state: {self.work_id} {relative}", "--", relative)
+        old = self.git("rev-parse", "HEAD")
+        old_blob, old_raw = self._blob(old, relative)
+        self._projection(relative, old_blob, old_raw, old_blob, old_raw)
+        require(not immutable or old_blob is None, detail="immutable version already exists")
+        if old_raw == raw:
+            return
+        # Prepare Git objects using an isolated index. Neither the real index
+        # nor working content changes if object creation/commit construction fails.
+        journal = self._journal_path()
+        with tempfile.TemporaryDirectory(prefix="ews-index-", dir=journal.parent) as temp:
+            env = dict(os.environ, GIT_INDEX_FILE=str(Path(temp) / "index"))
+            def index_git(*args, input=None):
+                result = subprocess.run(["git", "-c", "core.fsync=all", "-c", "core.fsyncMethod=fsync",
+                                         "-C", str(self.repo), *args], env=env, input=input, capture_output=True)
+                require(result.returncode == 0, detail=result.stderr.decode().strip())
+                return result.stdout.decode().strip()
+            blob = index_git("hash-object", "-w", "--stdin", input=raw)
+            index_git("read-tree", old)
+            index_git("update-index", "--add", "--cacheinfo", f"100644,{blob},{relative}")
+            tree = index_git("write-tree")
+            new = self.git("commit-tree", tree, "-p", old, "-m", f"state: {self.work_id} {relative}")
+        tx = {"old": old, "new": new, "relative": relative, "work_id": self.work_id,
+              "branch": f"refs/heads/work/{self.work_id}"}
+        atomic(journal, canonical({"transaction": tx, "sha256": digest(tx)}), immutable=True)
+        require(self.git("symbolic-ref", "HEAD") == tx["branch"], detail="control branch drift before publication")
+        self.git("update-ref", tx["branch"], new, old)
+        self._recover()
