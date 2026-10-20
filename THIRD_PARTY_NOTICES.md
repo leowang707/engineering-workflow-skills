@@ -3,7 +3,10 @@
 The following skills are adapted from [mattpocock/skills](https://github.com/mattpocock/skills) (MIT License):
 
 - `grilling`, `to-spec`, `to-tickets`, `implement`, `frozen-review` (two-axis review), `handoff`, `workflow` (router): adapted
-- `tdd`, `diagnosing-bugs`: copied with small edits
+- `implement-spec`, `retro`: adapted
+- `tdd`, `diagnosing-bugs`, `pr`, `prototype`, `research`, `writing-for-agents`: copied with small edits
+
+`pr`'s Summary section credits Dex Horthy's `show-me` skill; see `skills/pr/CREDITS.md`.
 
 ```
 MIT License

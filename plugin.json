@@ -1,6 +1,6 @@
 {
-  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "$schema": "https://agent-plugins.org/schemas/1.1.0/plugin.schema.json",
   "name": "engineering-workflow-skills",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Leo's personal engineering workflow: grilling, spec, tickets, frozen acceptance criteria, TDD and bounded review. Works in Claude Code and Codex."
 }

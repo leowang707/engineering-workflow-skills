@@ -7,7 +7,7 @@ It combines two sources:
 - the small, composable skills from [mattpocock/skills](https://github.com/mattpocock/skills) (grilling, spec, tracer-bullet tickets, TDD, bug diagnosis, two-axis review, handoff);
 - the strict parts of this repo's earlier v0.4 lifecycle: acceptance criteria frozen **before** coding, a review that can't add criteria after seeing the code, and a fixed verdict order.
 
-Every loop has a stop: acceptance freezing and review each run **at most 2 rounds**, then hand the decision to you. Missing evidence stops the review instead of starting another round.
+Every loop has a stop: acceptance freezing and review each run **at most 2 rounds**. When a review does not pass, `resolve-review` gives each finding one cause and fixes them in one batch; whatever still fails after round 2 comes to you with four options (reopen the criterion, split a ticket, accept with a follow-up, drop).
 
 ## Install
 
@@ -42,11 +42,14 @@ This symlinks every skill into `~/.claude/skills` (Claude Code) and `~/.agents/s
 ## The flow
 
 ```
-grilling ──▶ /to-spec ──▶ /to-tickets ──▶ /implement (per ticket)
+grilling ──▶ /to-spec ──▶ /to-tickets ──▶ /implement (per ticket) or /implement-spec (parallel)
                               │                 │
                               ▼                 ├─▶ tdd
-                       freeze-acceptance        └─▶ frozen-review
-                        (≤ 2 rounds)              (≤ 2 rounds)
+                       freeze-acceptance        └─▶ frozen-review ──not passed──▶ resolve-review
+                        (≤ 2 rounds)              (≤ 2 rounds)                    (fix by cause, or you decide)
+                                                        │
+                                                        ▼
+                                                   pr ──▶ /retro
 ```
 
 Run `/workflow` for the full map. Work artifacts go in `.workflow/<feature>/` in your project (decisions, spec, tickets, acceptance rounds, reviews), so a Claude session can pick up what a Codex session started and the other way around.
@@ -59,6 +62,8 @@ Run `/workflow` for the full map. Work artifacts go in `.workflow/<feature>/` in
 - [`to-spec`](skills/to-spec/SKILL.md): turn settled decisions into a spec with numbered, falsifiable requirements.
 - [`to-tickets`](skills/to-tickets/SKILL.md): split a spec into tracer-bullet tickets and freeze their acceptance criteria.
 - [`implement`](skills/implement/SKILL.md): build one frozen ticket test-first, inside its boundary, then review it.
+- [`implement-spec`](skills/implement-spec/SKILL.md): build every ticket of a spec in parallel with sub-agents on one integration branch.
+- [`retro`](skills/retro/SKILL.md): after a build, suggest changes to checks, standards and these skills.
 - [`handoff`](skills/handoff/SKILL.md): write a handoff file for the next session or tool.
 - [`new-skill`](skills/new-skill/SKILL.md): add a new skill to this repo.
 
@@ -68,6 +73,11 @@ Run `/workflow` for the full map. Work artifacts go in `.workflow/<feature>/` in
 - [`freeze-acceptance`](skills/freeze-acceptance/SKILL.md): independently check tickets and lock their acceptance criteria.
 - [`tdd`](skills/tdd/SKILL.md): red-green loop at agreed seams.
 - [`frozen-review`](skills/frozen-review/SKILL.md): review on two axes (frozen criteria and coding standards) with a fixed verdict.
+- [`resolve-review`](skills/resolve-review/SKILL.md): when a review does not pass, classify each finding by cause, fix in one batch, and hand the rest to you.
+- [`pr`](skills/pr/SKILL.md): PR body with the smallest useful visual, before/after evidence and merge danger.
+- [`prototype`](skills/prototype/SKILL.md): throwaway code that answers a design question.
+- [`research`](skills/research/SKILL.md): background research against primary sources, written to a cited notes file.
+- [`writing-for-agents`](skills/writing-for-agents/SKILL.md): how to write skills, `AGENTS.md` and `CLAUDE.md`.
 - [`diagnosing-bugs`](skills/diagnosing-bugs/SKILL.md): build a feedback loop that goes red on the bug before theorizing.
 
 ## Adding a skill

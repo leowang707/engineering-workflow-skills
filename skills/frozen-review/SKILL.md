@@ -10,7 +10,7 @@ Two separate checks of the diff between `HEAD` and a fixed point:
 
 ## 1. Round limit
 
-Find the review history in `.workflow/<feature>/reviews/<NN>-r<K>.md`. **At most 2 rounds per ticket.** If round 2 is not `PASS` or `PASS_WITH_FINDINGS`, stop and hand the remaining findings to the user to decide. Do not start a round 3 on your own, and do not hand the work back to implementation automatically.
+Find the review history in `.workflow/<feature>/reviews/<NN>-r<K>.md`. **At most 2 rounds per ticket.** If round 2 is not `PASS` or `PASS_WITH_FINDINGS`, write the report and call the Skill tool with "resolve-review", which hands the decision to the user. Never start a round 3 on your own.
 
 ## 2. Pin the inputs
 
@@ -48,8 +48,7 @@ Derive it mechanically; do not override it:
 What happens next:
 
 - `PASS` / `PASS_WITH_FINDINGS`: done. Non-blocking findings go to the user as candidates for future work.
-- `FAIL`: implementation fixes the named failures; this is the one case that loops, and only within the round limit.
-- `INSUFFICIENT_EVIDENCE` / `BLOCKED` / `CONTRACT_AMBIGUITY`: stop and show the user what is missing. Do not re-review automatically.
+- Anything else: write the report (step 5), then call the Skill tool with "resolve-review". It classifies each finding by cause, fixes what can be fixed in one batch, asks the user about the rest, and decides whether a next round is allowed. Do not start the next round from here.
 
 On a second round, re-check the previous failures and any criteria the fix may have touched; keep the earlier results that the fix could not have affected.
 
