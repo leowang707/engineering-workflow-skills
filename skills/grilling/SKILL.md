@@ -36,3 +36,8 @@ When working in a repository, keep the settled decisions in `.workflow/<feature>
 ## Done
 
 The session is done when the frontier is empty: every branch visited, every remaining unknown written down, nothing silently assumed. Confirm the shared understanding with the user before anything is built. Do not implement.
+
+If this grilling is the start of a build, end with the next step on its own line, in the same conversation:
+
+- `Next: /to-spec`, for work that needs a spec and tickets;
+- `Next: build it with tdd, then review with frozen-review`, for a small change that fits in this session.

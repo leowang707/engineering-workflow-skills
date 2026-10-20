@@ -56,3 +56,11 @@ Avoid file paths and code snippets in tickets; they go stale fast.
 ## 5. Freeze acceptance
 
 Every spec requirement must be covered by at least one ticket. Then call the Skill tool with "freeze-acceptance" for the ticket set. Tickets are ready to implement only after it returns `APPROVED`.
+
+## 6. Next step
+
+Once the set is `APPROVED`, end with the next step on its own line:
+
+`Next: start a new conversation and run /implement <NN> for the first unblocked ticket (or /implement-spec to build them all in parallel)`
+
+If freezing did not reach `APPROVED`, the next step is the user's decision that `freeze-acceptance` asked for; say so instead.

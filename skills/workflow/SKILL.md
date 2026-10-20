@@ -36,6 +36,8 @@ Small change that fits in one session? Skip steps 2 and 3: grill if needed, then
 
 Keep steps 1 to 3 in one unbroken context so the spec and tickets build on the same thinking. Each `/implement` starts fresh from its ticket file.
 
+Each of these steps ends with a `Next:` line naming the command to run after it, so you can follow the flow without this map. The steps never run the next one for you: you choose when to continue, clear the context, or stop.
+
 ## On-ramps and detours
 
 - **A design question you can't settle on paper** → **`prototype`**: throwaway code (a logic demo or UI variants) that answers it, then back to grilling.
@@ -44,6 +46,7 @@ Keep steps 1 to 3 in one unbroken context so the spec and tickets build on the s
 
 ## Moving between sessions
 
+- **`/next`**: back after a break and not sure where you were? It reads `.workflow/` and tells you the stage and the exact command to run next, without running it.
 - **`/handoff`**: write a handoff file so another session, another tool (Claude or Codex), or a colleague can continue.
 
 ## Extending
@@ -74,4 +77,5 @@ Keep steps 1 to 3 in one unbroken context so the spec and tickets build on the s
 | `writing-for-agents` | model or user | How to write skills and agent docs |
 | `diagnosing-bugs` | model or user | Feedback-loop-first debugging |
 | `handoff` | user | Handoff document for the next session |
+| `next` | user | Where the work stands and the command to run next |
 | `new-skill` | user | Add a skill to this workflow |

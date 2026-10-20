@@ -5,10 +5,17 @@
 # Each entry is a symlink into this checkout, so `git pull` keeps them current.
 # Re-run after adding, removing or renaming a skill.
 # Use this OR the plugin install, not both, or every skill shows up twice.
+# --codex-only links only ~/.agents/skills, for when Claude gets the skills
+# another way (for example, uploaded to your Claude account).
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DESTS=("${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}" "${AGENTS_SKILLS_DIR:-$HOME/.agents/skills}")
+case "${1:-}" in
+  "") ;;
+  --codex-only) DESTS=("${AGENTS_SKILLS_DIR:-$HOME/.agents/skills}") ;;
+  *) echo "usage: $0 [--codex-only]" >&2; exit 1 ;;
+esac
 
 for DEST in "${DESTS[@]}"; do
   if [ -L "$DEST" ]; then
