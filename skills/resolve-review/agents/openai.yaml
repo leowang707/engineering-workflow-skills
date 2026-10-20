@@ -1,0 +1,3 @@
+interface:
+  display_name: "Resolve Review"
+  short_description: "Handle failed review findings by cause"

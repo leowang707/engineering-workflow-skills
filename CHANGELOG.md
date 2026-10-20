@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 - 2026-10-20
+
+- Add `resolve-review`: when a review does not pass, each finding gets one cause (defect, evidence gap, environment, criterion problem, boundary, reviewer error) and a matching action; fixes go in one batch; after round 2 the user picks reopen, split, accept or drop.
+- `frozen-review` and `implement` hand every non-passing result to `resolve-review` instead of looping on their own.
+- Add from mattpocock/skills: `implement-spec` (adapted to frozen tickets), `pr`, `retro` (also reviews these skills), `prototype`, `research`, `writing-for-agents`.
+
 ## 1.0.0 - 2026-10-20
 
 Rebuilt as a personal workflow that runs in both Claude Code and Codex.

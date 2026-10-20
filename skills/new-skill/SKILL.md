@@ -28,7 +28,7 @@ It creates `skills/<name>/SKILL.md` from `templates/SKILL.md` and `skills/<name>
 
 ## 3. Write the skill
 
-Fill in `SKILL.md`:
+Call the Skill tool with "writing-for-agents" for the writing guide, then fill in `SKILL.md`:
 
 - **description**: for a model-invoked skill, say what it does and then "Use when ..." with the phrases a user would actually say; this is what makes the agent pick it. For a user-invoked skill, a one-line human summary is enough. Keep it under 1024 characters.
 - **body**: short and imperative. Give the agent concrete output formats (templates, file locations under `.workflow/<feature>/`) rather than abstract rules. Define any term the skill relies on inside the skill itself.

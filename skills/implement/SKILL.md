@@ -36,6 +36,6 @@ Before review, confirm each frozen criterion has candidate evidence (a passing t
 
 On `READY_FOR_REVIEW`, call the Skill tool with "frozen-review" for this ticket. Never declare the ticket passed yourself.
 
-If the review returns `FAIL`, fix the named failures and call "frozen-review" again. Its round limit decides when to stop and ask the user.
+If the review does not pass, it hands over to the `resolve-review` skill, which fixes findings by cause in one batch and asks for at most one more round. Follow it; do not patch findings one by one between reviews.
 
 When the review passes, commit to the current branch with the ticket number in the message, and set the ticket file to `**Status:** done`.
