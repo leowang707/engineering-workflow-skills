@@ -1,63 +1,58 @@
 ---
 name: to-tickets
-description: Decompose a frozen specification only where separate engineering Tickets create safe, useful parallel work.
+description: Split a spec or plan into tracer-bullet tickets with blocking edges, then freeze their acceptance criteria.
+disable-model-invocation: true
 ---
 
-Start from frozen specification semantics.
+Break a spec, plan, or the current conversation into **tickets**: thin vertical slices, each declaring the tickets that **block** it.
 
-Recursively decompose work.
+## 1. Gather context
 
-Create separate Tickets only when each resulting unit is:
-- parallel-safe;
-- independently assignable;
-- independently completable;
-- independently reviewable;
-- meaningfully scoped;
-- materially more useful in parallel than the coordination, context, setup, validation, integration, and review overhead it introduces.
+Read `.workflow/<feature>/spec.md` (or the reference the user passed). If the spec says `Status: PARTIAL`, stop and tell the user which decisions are still open.
 
-Otherwise keep the finer work inside one Ticket as an advisory Work Outline.
+Explore the codebase if you have not already. Look for prefactoring that makes the change easy: "Make the change easy, then make the easy change."
 
-When choosing between valid decompositions, prefer:
-1. safety;
-2. independence;
-3. material parallelism;
-4. lower overhead;
-5. simpler integration and review;
-6. fewer Tickets and simpler topology.
+## 2. Draft vertical slices
 
-For each Ticket define:
-- `topology_role`: `NORMAL`, `FORK`, or `JOIN`;
-- normative scope;
-- semantic reads;
-- semantic writes;
-- dependencies;
-- parallel-safety status;
-- minimal complete `TICKET_LOCAL` Claims;
-- Review Contract Candidate;
-- Execution Preconditions Candidate.
+- Each ticket cuts a narrow but complete path through every layer it touches (schema, API, UI, tests), not a horizontal slice of one layer.
+- Each ticket is demoable or verifiable on its own.
+- Each ticket fits in one fresh context window.
+- Prefactoring comes first.
+- Do not split purely sequential steps into separate tickets just to list them; keep them as a checklist inside one ticket.
 
-Outcome and Work Outline are non-normative.
+Give each ticket its **blocking edges**: the tickets that must finish before it can start.
 
-Sequential engineering work remains inside one Ticket.
+**Wide refactors** (one mechanical change that breaks many call sites at once) don't fit a vertical slice. Sequence them as expand, migrate in batches, contract: add the new form beside the old, migrate callers in batches that each stay green, then delete the old form once nothing uses it.
 
-A `NORMAL` Ticket in a multi-ticket graph must belong to at least one material safe parallel region.
+## 3. Check with the user
 
-Use `FORK` only for engineering work that establishes a frozen boundary enabling multiple parallel branches.
+Show the breakdown as a numbered list with title, blocked by, and what it delivers. Ask whether the granularity and the blocking edges are right, and iterate until the user approves.
 
-Use `JOIN` only for engineering work that genuinely consumes multiple parallel branches.
+## 4. Write the tickets
 
-Cross-ticket behavior uses explicit `INTEGRATION` or aggregate Claims.
-Each local Claim has exactly one accountable Ticket owner.
+Write one file per ticket to `.workflow/<feature>/tickets/<NN>-<slug>.md`, numbered in dependency order (blockers first). If the user asks for GitHub Issues, also publish one issue per ticket with `gh`, blockers first, and record the issue URL in each file.
 
-Mechanical, decision-free shared setup may be `SHARED_PREPARATION`; engineering responsibility must be a Ticket.
+<ticket-template>
 
-Parallel safety is `VERIFIED`, `PROVISIONAL`, `NOT_SAFE`, or `UNKNOWN`.
-`UNKNOWN` cannot justify a split.
+# <NN>: <Ticket title>
 
-Output only:
-- the selected graph;
-- material maximal parallel regions;
-- material decomposition decisions;
-- material rejected boundaries or alternatives.
+**Spec requirements covered:** R1, R4
 
-If a required shared contract is not frozen, return `PARALLEL_BOUNDARY_BLOCKED`.
+**What to build:** the end-to-end behavior this ticket makes work, from the user's perspective.
+
+**Blocked by:** ticket numbers, or "None".
+
+**Draft acceptance criteria:**
+
+- [ ] <observable, falsifiable criterion>
+- [ ] <observable, falsifiable criterion>
+
+**Status:** draft
+
+</ticket-template>
+
+Avoid file paths and code snippets in tickets; they go stale fast.
+
+## 5. Freeze acceptance
+
+Every spec requirement must be covered by at least one ticket. Then call the Skill tool with "freeze-acceptance" for the ticket set. Tickets are ready to implement only after it returns `APPROVED`.

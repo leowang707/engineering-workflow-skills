@@ -1,0 +1,5 @@
+interface:
+  display_name: "Workflow"
+  short_description: "Which skill fits what you are doing"
+policy:
+  allow_implicit_invocation: false

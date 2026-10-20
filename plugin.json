@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "engineering-workflow-skills",
-  "version": "0.4.0",
-  "description": "Six unchanged lifecycle kernels with multi-surface execution, durable state and deterministic review infrastructure."
+  "version": "1.0.0",
+  "description": "Leo's personal engineering workflow: grilling, spec, tickets, frozen acceptance criteria, TDD and bounded review. Works in Claude Code and Codex."
 }

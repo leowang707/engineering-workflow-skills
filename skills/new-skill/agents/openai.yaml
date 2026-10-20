@@ -1,0 +1,5 @@
+interface:
+  display_name: "New Skill"
+  short_description: "Add a new skill to this workflow"
+policy:
+  allow_implicit_invocation: false

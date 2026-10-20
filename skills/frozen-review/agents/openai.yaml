@@ -1,0 +1,3 @@
+interface:
+  display_name: "Frozen Review"
+  short_description: "Review against frozen criteria, max 2 rounds"

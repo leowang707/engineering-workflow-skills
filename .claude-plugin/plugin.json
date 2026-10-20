@@ -1,0 +1,11 @@
+{
+  "name": "engineering-workflow-skills",
+  "version": "1.0.0",
+  "description": "Leo's personal engineering workflow: grilling, spec, tickets, frozen acceptance criteria, TDD and bounded review. Works in Claude Code and Codex.",
+  "author": {
+    "name": "leowang707",
+    "url": "https://github.com/leowang707"
+  },
+  "repository": "https://github.com/leowang707/engineering-workflow-skills",
+  "keywords": ["engineering", "workflow", "skills", "tdd", "spec", "review"]
+}

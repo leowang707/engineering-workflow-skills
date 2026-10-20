@@ -1,0 +1,5 @@
+interface:
+  display_name: "Handoff"
+  short_description: "Write a handoff for the next session"
+policy:
+  allow_implicit_invocation: false
