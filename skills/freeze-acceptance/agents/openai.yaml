@@ -1,0 +1,3 @@
+interface:
+  display_name: "Freeze Acceptance"
+  short_description: "Lock acceptance criteria before coding"

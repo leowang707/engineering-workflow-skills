@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.0 - 2026-10-20
+
+Rebuilt as a personal workflow that runs in both Claude Code and Codex.
+
+- Add 11 skills: `workflow`, `grilling`, `to-spec`, `to-tickets`, `freeze-acceptance`, `implement`, `tdd`, `frozen-review`, `diagnosing-bugs`, `handoff`, `new-skill`. Several are adapted from mattpocock/skills (MIT).
+- Keep v0.4's strict ideas: acceptance criteria frozen before coding, no criteria added after seeing the code, fixed verdict order, `PARTIAL` specs.
+- Fix repeated reviews: `freeze-acceptance` and `frozen-review` run at most 2 rounds, then hand the decision to the user; missing evidence or blocked checks stop instead of looping.
+- Rename `review` to `frozen-review` to avoid clashing with built-in review commands.
+- Add Claude Code plugin and marketplace manifests, `agents/openai.yaml` for Codex, `scripts/link-skills.sh`, `scripts/new-skill.sh`, `scripts/validate.py` and a CI workflow.
+- Move the v0.4 kernels, framework and records unchanged to `legacy/v0.4/`.
+
 ## 0.4.0 - 2026-10-08
 
 - Add multi-surface framework infrastructure, durable YAML StateStores, exact provenance and review projections.

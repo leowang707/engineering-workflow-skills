@@ -1,0 +1,22 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python3 scripts/validate.py
+      - name: Scaffold a throwaway skill
+        run: |
+          scripts/new-skill.sh ci-probe model "CI Probe" "Probe skill for CI"
+          test -f skills/ci-probe/SKILL.md
+          test -f skills/ci-probe/agents/openai.yaml
+          rm -rf skills/ci-probe

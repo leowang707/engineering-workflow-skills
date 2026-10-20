@@ -1,0 +1,16 @@
+{
+  "name": "leowang707",
+  "owner": {
+    "name": "leowang707",
+    "url": "https://github.com/leowang707"
+  },
+  "description": "Leo's personal engineering workflow skills.",
+  "plugins": [
+    {
+      "name": "engineering-workflow-skills",
+      "source": "./",
+      "description": "Grilling, spec, tickets, frozen acceptance criteria, TDD and bounded review for Claude Code and Codex.",
+      "category": "engineering"
+    }
+  ]
+}
