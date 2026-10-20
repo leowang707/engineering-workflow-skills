@@ -39,6 +39,8 @@ scripts/link-skills.sh
 
 This symlinks every skill into `~/.claude/skills` (Claude Code) and `~/.agents/skills` (Codex). `git pull` updates them; re-run the script after adding a skill.
 
+If you install the skills in Claude another way (for example by uploading them to your Claude account), run `scripts/link-skills.sh --codex-only` so only `~/.agents/skills` is linked and Claude doesn't see every skill twice.
+
 ## The flow
 
 ```
@@ -52,13 +54,14 @@ grilling ──▶ /to-spec ──▶ /to-tickets ──▶ /implement (per tick
                                                    pr ──▶ /retro
 ```
 
-Run `/workflow` for the full map. Work artifacts go in `.workflow/<feature>/` in your project (decisions, spec, tickets, acceptance rounds, reviews), so a Claude session can pick up what a Codex session started and the other way around.
+Each step ends with a `Next:` line telling you what to run after it, and `/next` works it out from `.workflow/` when you come back later. Run `/workflow` for the full map. Work artifacts go in `.workflow/<feature>/` in your project (decisions, spec, tickets, acceptance rounds, reviews), so a Claude session can pick up what a Codex session started and the other way around.
 
 ## Skills
 
 **User-invoked** (you type them):
 
 - [`workflow`](skills/workflow/SKILL.md): map of the skills and which one fits now.
+- [`next`](skills/next/SKILL.md): read `.workflow/` and say where the work stands and which command to run next.
 - [`to-spec`](skills/to-spec/SKILL.md): turn settled decisions into a spec with numbered, falsifiable requirements.
 - [`to-tickets`](skills/to-tickets/SKILL.md): split a spec into tracer-bullet tickets and freeze their acceptance criteria.
 - [`implement`](skills/implement/SKILL.md): build one frozen ticket test-first, inside its boundary, then review it.

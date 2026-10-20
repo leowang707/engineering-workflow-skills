@@ -56,3 +56,10 @@ Only for a PARTIAL spec, or facts still `UNKNOWN`.
 </spec-template>
 
 Do not split the work into tickets here; that is `/to-tickets`.
+
+## Next step
+
+End with the next step on its own line:
+
+- `COMPLETE`: `Next: /to-tickets` in this same conversation, so the tickets build on the same thinking.
+- `PARTIAL`: `Next: settle the open decisions with grilling, then run /to-spec again`.

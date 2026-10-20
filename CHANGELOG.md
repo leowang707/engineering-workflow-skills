@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0 - 2026-10-20
+
+- `grilling`, `to-spec`, `to-tickets`, `implement`, `implement-spec` and `resolve-review` end with a `Next:` line naming the command to run after them. They still never run that command themselves.
+- Add `next`: reads `.workflow/<feature>/` and says where the work stands and the one command to run next, without running it.
+- `scripts/link-skills.sh --codex-only` links only `~/.agents/skills`, for when Claude gets the skills another way.
+
 ## 1.1.0 - 2026-10-20
 
 - Add `resolve-review`: when a review does not pass, each finding gets one cause (defect, evidence gap, environment, criterion problem, boundary, reviewer error) and a matching action; fixes go in one batch; after round 2 the user picks reopen, split, accept or drop.

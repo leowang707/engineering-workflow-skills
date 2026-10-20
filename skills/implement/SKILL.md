@@ -39,3 +39,12 @@ On `READY_FOR_REVIEW`, call the Skill tool with "frozen-review" for this ticket.
 If the review does not pass, it hands over to the `resolve-review` skill, which fixes findings by cause in one batch and asks for at most one more round. Follow it; do not patch findings one by one between reviews.
 
 When the review passes, commit to the current branch with the ticket number in the message, and set the ticket file to `**Status:** done`.
+
+## Next step
+
+End with the next step on its own line, worked out from the ticket files:
+
+- another ticket has all its blockers done: `Next: start a new conversation and run /implement <NN>`;
+- tickets remain but all are blocked by one that is not done: name the blocker and what it is waiting on;
+- every ticket is done: `Next: open the PR (the pr skill writes the body), then run /retro`;
+- the review ended in a decision for the user: `Next: answer the decision in <NN>-decision.md`.

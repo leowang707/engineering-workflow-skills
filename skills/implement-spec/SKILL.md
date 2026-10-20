@@ -36,3 +36,5 @@ Keep messages to and from sub-agents short. Pass **context pointers** (paths to 
 ## Report
 
 Tell the user: the integration branch name, which tickets passed, and for each one that did not, why and what decision it needs (link its `<NN>-decision.md`). If the user wants a PR, call the Skill tool with "pr" to write its body.
+
+End with the next step on its own line: the open decisions to answer if any ticket did not pass, otherwise `Next: open the PR, then run /retro`.
