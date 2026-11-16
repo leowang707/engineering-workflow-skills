@@ -1,8 +1,7 @@
 ---
 name: handoff
-description: Compact the current conversation into a handoff document for another agent or session to pick up.
+description: Compact the current conversation into a handoff document for another agent or session to pick up. Use when the user is stopping for now, switching to another tool (Claude or Codex) or a fresh session, or says "handoff", "先到這裡", "換 Codex 接手", "寫交接".
 argument-hint: "What will the next session be used for?"
-disable-model-invocation: true
 ---
 
 Write a handoff document summarizing the current conversation so a fresh agent (Claude or Codex) can continue the work.

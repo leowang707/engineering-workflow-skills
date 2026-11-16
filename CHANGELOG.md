@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.0 - 2026-11-16
+
+- `next`, `handoff` and `workflow` are now model-invoked: the agent can reach for them when the user asks where things stand, is stopping for now, or asks which skill to use. They only read files or write a note. Skills that change code or lock criteria (`implement`, `implement-spec`, `to-tickets`, `to-spec`) stay user-invoked.
+
 ## 1.3.0 - 2026-11-16
 
 - Add `distill`: decides which specs and lessons from the work are durable, not derivable from the code, and costly to forget, and files them as structured entries in `.knowledge/` (`INDEX.md` plus one file each). At most 5 entries per run; updates or supersedes instead of duplicating.

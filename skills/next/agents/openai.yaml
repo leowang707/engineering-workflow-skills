@@ -1,5 +1,3 @@
 interface:
   display_name: "Next"
   short_description: "Read .workflow/ and say which command to run next"
-policy:
-  allow_implicit_invocation: false
