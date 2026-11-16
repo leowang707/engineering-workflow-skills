@@ -32,7 +32,7 @@ Reply in at most five lines:
 ```
 Feature: <name>
 Stage: <stage> (<k> of <n> tickets done, if building)
-Last activity: <the most recent file touched in .workflow/<feature>/ and what it says>
+Last activity: <the last line of .workflow/<feature>/progress.md, or else the most recent file touched there and what it says>
 Next: <the exact command>
 ```
 

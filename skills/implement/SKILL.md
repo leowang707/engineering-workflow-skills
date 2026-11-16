@@ -41,6 +41,10 @@ If the review does not pass, it hands over to the `resolve-review` skill, which 
 
 When the review passes, commit to the current branch with the ticket number in the message, and set the ticket file to `**Status:** done`.
 
+## Save
+
+Whatever the outcome, Append one line to `.workflow/<feature>/progress.md` (create it if missing): `- <YYYY-MM-DD> implement <NN>: <done|BLOCKED|STRUCTURAL_CHANGE|decision pending>, <one-line reason>`. When the ticket is done, call the Skill tool with "distill" in checkpoint mode on this ticket's conversation and reviews.
+
 ## Next step
 
 End with the next step on its own line, worked out from the ticket files:

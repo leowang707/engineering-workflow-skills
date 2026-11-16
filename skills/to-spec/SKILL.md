@@ -57,6 +57,10 @@ Only for a PARTIAL spec, or facts still `UNKNOWN`.
 
 Do not split the work into tickets here; that is `/to-tickets`.
 
+## Save
+
+Append one line to `.workflow/<feature>/progress.md` (create it if missing): `- <YYYY-MM-DD> to-spec: <COMPLETE|PARTIAL>, <n> requirements`. Then, for a `COMPLETE` spec, call the Skill tool with "distill" in checkpoint mode on this spec's Implementation Decisions, so the ones that outlive this feature are kept.
+
 ## Next step
 
 End with the next step on its own line:

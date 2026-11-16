@@ -3,7 +3,13 @@ name: distill
 description: Decide which specs and lessons from recent work are worth keeping, and file them as structured entries in the project's `.knowledge/` folder; also read that folder before planning or building. Use when a feature or bug fix is finished, after a review hit its round limit, when the user corrected the agent, when starting work in a project that has `.knowledge/INDEX.md`, or when the user says "remember this", "記下來", "save the lesson", "what did we learn".
 ---
 
-Keep a small, curated store of what this project must not forget. You decide what goes in; the test below is how.
+Keep a small, curated store of what this project must not forget. You decide what goes in; the test below is how. Nothing needs setting up: the first write creates the store.
+
+The workflow skills call this skill on their own at checkpoints (spec written, ticket done, review decided, bug fixed), so in daily use the user never has to ask. It runs in one of three modes:
+
+- **checkpoint**: another skill called you and named its sources. Do not ask the user anything except to settle a contradiction. Report in one line.
+- **manual**: the user asked ("remember this", "記下來", "what did we learn"). Full report, and you may offer the pointer line below.
+- **reading**: you are about to plan or build. Read only.
 
 Terms:
 
@@ -89,7 +95,7 @@ Keep `INDEX.md` under 100 lines. When it would go over, merge overlapping entrie
 
 ### 4. Report
 
-Reply with:
+In checkpoint mode, reply with one line: `Distilled: <k> kept (<titles>)` or `Distilled: nothing new`. In manual mode, reply with:
 
 ```
 Kept:
@@ -102,7 +108,7 @@ Stop there. The user can veto or edit any entry; the files are plain Markdown.
 
 ## First run in a project
 
-If `.knowledge/` does not exist, create it with the layout above. Then offer, once, to add this one line to the project's `AGENTS.md` (Codex) or `CLAUDE.md` (Claude), so sessions that never load this skill still see the store:
+If `.knowledge/` does not exist, create it with the layout above without asking. In manual mode only, offer once to add this one line to the project's `AGENTS.md` (Codex) or `CLAUDE.md` (Claude), so sessions that never load this skill still see the store:
 
 ```
 Project knowledge: read `.knowledge/INDEX.md` before planning or changing code.

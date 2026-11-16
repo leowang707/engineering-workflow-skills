@@ -54,7 +54,7 @@ grilling ──▶ /to-spec ──▶ /to-tickets ──▶ /implement (per tick
                                                    pr ──▶ /retro
 ```
 
-Each step ends with a `Next:` line telling you what to run after it, and `/next` works it out from `.workflow/` when you come back later. Run `/workflow` for the full map. Work artifacts go in `.workflow/<feature>/` in your project (decisions, spec, tickets, acceptance rounds, reviews), so a Claude session can pick up what a Codex session started and the other way around. Rules and lessons that outlive a feature go in `.knowledge/`, kept by `distill`.
+Each step ends with a `Next:` line telling you what to run after it, and `/next` works it out from `.workflow/` when you come back later. Run `/workflow` for the full map. Work artifacts go in `.workflow/<feature>/` in your project (decisions, spec, tickets, acceptance rounds, reviews), so a Claude session can pick up what a Codex session started and the other way around. Each step appends a line to `.workflow/<feature>/progress.md` as it finishes, and rules and lessons that outlive a feature are filed in `.knowledge/` by `distill`, which the main flow calls at its checkpoints. Nothing to set up: both are created on first use.
 
 ## Skills
 

@@ -127,6 +127,8 @@ If a correct seam exists:
 4. Watch it pass.
 5. Re-run the Phase 1 feedback loop against the original (un-minimised) scenario.
 
+Once the fix holds, call the Skill tool with "distill" in checkpoint mode on the root cause and the hypotheses that were wrong.
+
 ## Phase 6: Cleanup
 
 Required before declaring done:
