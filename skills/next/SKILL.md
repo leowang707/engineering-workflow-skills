@@ -21,7 +21,7 @@ Check these in order and stop at the first that matches. Read the files; do not 
 | `spec.md` says `Status: PARTIAL` | spec has gaps | settle the listed open decisions with grilling, then `/to-spec` again |
 | no tickets, or any ticket says `**Status:** draft` | splitting | `/to-tickets` (it also freezes acceptance) |
 | some tickets not `done` | building | `/implement <NN>` in a new conversation, for a ticket whose blockers are all `done`; mention `/implement-spec` when two or more are unblocked |
-| every ticket `done` | finished | open the PR (the `pr` skill writes the body), then `/retro` |
+| every ticket `done` | finished | open the PR (the `pr` skill writes the body), ask to distill this feature's specs and lessons into `.knowledge/`, then `/retro` |
 
 If tickets remain but none is unblocked, name the ticket that blocks them and why it is stuck (check its latest file in `reviews/`).
 
@@ -32,7 +32,7 @@ Reply in at most five lines:
 ```
 Feature: <name>
 Stage: <stage> (<k> of <n> tickets done, if building)
-Last activity: <the most recent file touched in .workflow/<feature>/ and what it says>
+Last activity: <the last line of .workflow/<feature>/progress.md, or else the most recent file touched there and what it says>
 Next: <the exact command>
 ```
 

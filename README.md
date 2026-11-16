@@ -54,7 +54,7 @@ grilling ──▶ /to-spec ──▶ /to-tickets ──▶ /implement (per tick
                                                    pr ──▶ /retro
 ```
 
-Each step ends with a `Next:` line telling you what to run after it, and `/next` works it out from `.workflow/` when you come back later. Run `/workflow` for the full map. Work artifacts go in `.workflow/<feature>/` in your project (decisions, spec, tickets, acceptance rounds, reviews), so a Claude session can pick up what a Codex session started and the other way around.
+Each step ends with a `Next:` line telling you what to run after it, and `/next` works it out from `.workflow/` when you come back later. Run `/workflow` for the full map. Work artifacts go in `.workflow/<feature>/` in your project (decisions, spec, tickets, acceptance rounds, reviews), so a Claude session can pick up what a Codex session started and the other way around. Each step appends a line to `.workflow/<feature>/progress.md` as it finishes, and rules and lessons that outlive a feature are filed in `.knowledge/` by `distill`, which the main flow calls at its checkpoints. Nothing to set up: both are created on first use.
 
 ## Skills
 
@@ -66,6 +66,7 @@ Each step ends with a `Next:` line telling you what to run after it, and `/next`
 - [`to-tickets`](skills/to-tickets/SKILL.md): split a spec into tracer-bullet tickets and freeze their acceptance criteria.
 - [`implement`](skills/implement/SKILL.md): build one frozen ticket test-first, inside its boundary, then review it.
 - [`implement-spec`](skills/implement-spec/SKILL.md): build every ticket of a spec in parallel with sub-agents on one integration branch.
+- [`distill`](skills/distill/SKILL.md): judge which specs and lessons are worth keeping and file them as structured entries in `.knowledge/`; read that folder before planning or building.
 - [`retro`](skills/retro/SKILL.md): after a build, suggest changes to checks, standards and these skills.
 - [`handoff`](skills/handoff/SKILL.md): write a handoff file for the next session or tool.
 - [`new-skill`](skills/new-skill/SKILL.md): add a new skill to this repo.

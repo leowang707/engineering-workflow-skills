@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0 - 2026-11-16
+
+- Add `distill`: decides which specs and lessons from the work are durable, not derivable from the code, and costly to forget, and files them as structured entries in `.knowledge/` (`INDEX.md` plus one file each). At most 5 entries per run; updates or supersedes instead of duplicating.
+- Automatic: `to-spec`, `implement`, `implement-spec`, `resolve-review` and `diagnosing-bugs` call `distill` in checkpoint mode (no questions, one-line report). The store is created on first write.
+- Progress is saved automatically: `grilling`, `to-spec`, `to-tickets`, `implement`, `implement-spec` and `resolve-review` append a line to `.workflow/<feature>/progress.md`; `next` reads its last line.
+- `grilling` and `implement` read `.knowledge/INDEX.md` first when it exists (and `grilling` reads `progress.md`); `next` suggests distilling when a feature is finished; `retro` sends project lessons to `distill`.
+
 ## 1.2.0 - 2026-10-20
 
 - `grilling`, `to-spec`, `to-tickets`, `implement`, `implement-spec` and `resolve-review` end with a `Next:` line naming the command to run after them. They still never run that command themselves.

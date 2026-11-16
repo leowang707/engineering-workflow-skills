@@ -10,6 +10,7 @@ Implement the ticket the user names (a path under `.workflow/<feature>/tickets/`
 
 - The ticket must say `**Status:** frozen`. If it is still a draft, tell the user to run `/to-tickets` (which freezes acceptance) first.
 - Every ticket it is blocked by must be done.
+- If the project has `.knowledge/INDEX.md`, read it and open the entries whose `applies-to` touches this ticket.
 - Re-read the spec and the frozen criteria. If the code has drifted so that a frozen assumption no longer holds, stop and report it.
 
 ## Boundary
@@ -39,6 +40,10 @@ On `READY_FOR_REVIEW`, call the Skill tool with "frozen-review" for this ticket.
 If the review does not pass, it hands over to the `resolve-review` skill, which fixes findings by cause in one batch and asks for at most one more round. Follow it; do not patch findings one by one between reviews.
 
 When the review passes, commit to the current branch with the ticket number in the message, and set the ticket file to `**Status:** done`.
+
+## Save
+
+Whatever the outcome, Append one line to `.workflow/<feature>/progress.md` (create it if missing): `- <YYYY-MM-DD> implement <NN>: <done|BLOCKED|STRUCTURAL_CHANGE|decision pending>, <one-line reason>`. When the ticket is done, call the Skill tool with "distill" in checkpoint mode on this ticket's conversation and reviews.
 
 ## Next step
 

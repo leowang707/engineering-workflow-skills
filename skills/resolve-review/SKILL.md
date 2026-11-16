@@ -49,4 +49,6 @@ Re-run the evidence for every item you fixed and for every passing criterion the
 
 If the latest round was the last one allowed (round 2) and it still did not pass, do not fix anything more. Write `.workflow/<feature>/reviews/<NN>-decision.md` with each remaining finding, its cause, and the same four options (reopen, split, accept, drop) with your recommendation, and ask the user to pick. Their choice is the outcome; record it in that file. Then end with the next step on its own line, worked out the same way `/implement` does (the next unblocked ticket, or the PR when every ticket is done).
 
+Once the user has chosen, Append one line to `.workflow/<feature>/progress.md` (create it if missing): `- <YYYY-MM-DD> resolve-review <NN>: <reopen|split|accept|drop>, <one-line reason>`. Then call the Skill tool with "distill" in checkpoint mode on the findings and the decision.
+
 If the same cause showed up in both rounds, suggest the user run `/retro` so the next ticket does not repeat it (a missing check, a vague criterion, an unclear standard).
