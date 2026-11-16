@@ -22,6 +22,8 @@ Work artifacts live in `.workflow/<feature>/` in the project, so any session (Cl
   handoff.md        handoff notes (handoff)
 ```
 
+What must outlive a single feature goes in `.knowledge/` at the project root instead: `INDEX.md` plus one file per spec or lesson, kept by **`distill`**.
+
 ## Main flow: idea to shipped code
 
 1. **`grilling`**: settle every material decision, one round at a time. Facts are looked up, decisions are asked.
@@ -30,7 +32,8 @@ Work artifacts live in `.workflow/<feature>/` in the project, so any session (Cl
 4. **`/implement`** one ticket at a time, clearing context between tickets. It builds with **`tdd`** inside the ticket's boundary, then calls **`frozen-review`**, which grades only against the frozen criteria. Or run **`/implement-spec`** to build every ticket in parallel with sub-agents on one integration branch.
 5. **When a review does not pass**, **`resolve-review`** takes over: it gives each finding one cause (defect, evidence gap, environment, criterion problem, boundary, reviewer error), fixes what it can in one batch, asks you about the rest, and allows at most one more round. After round 2 you choose: reopen the criterion, split a ticket, accept with a follow-up, or drop.
 6. **`pr`** shapes the PR body when the work goes up for review.
-7. **`/retro`** closes the loop: after a build, especially one where a review hit its limit, it suggests changes to checks, standards, or these skills so the next build goes smoother.
+7. **`distill`** keeps what the project must not forget: it judges which specs and lessons from the work are durable, not derivable from the code, and costly to forget, and files them in `.knowledge/`. Later sessions read `.knowledge/INDEX.md` before planning or building.
+8. **`/retro`** closes the loop: after a build, especially one where a review hit its limit, it suggests changes to checks, standards, or these skills so the next build goes smoother.
 
 Small change that fits in one session? Skip steps 2 and 3: grill if needed, then build with `tdd` and review with `frozen-review` against what was agreed in the conversation.
 
@@ -48,6 +51,7 @@ Each of these steps ends with a `Next:` line naming the command to run after it,
 
 - **`/next`**: back after a break and not sure where you were? It reads `.workflow/` and tells you the stage and the exact command to run next, without running it.
 - **`/handoff`**: write a handoff file so another session, another tool (Claude or Codex), or a colleague can continue.
+- **`distill`**: unlike a handoff, which is about where this work stands, `.knowledge/` holds rules and lessons that stay true after the work is done. Say "remember this" or "記下來" to file one mid-session.
 
 ## Extending
 
@@ -71,6 +75,7 @@ Each of these steps ends with a `Next:` line naming the command to run after it,
 | `resolve-review` | model or user | Handle a failed review by cause, then decide |
 | `implement-spec` | user | Build a whole spec in parallel |
 | `pr` | model or user | PR body with visual, evidence and merge danger |
+| `distill` | model or user | Keep durable specs and lessons in `.knowledge/` |
 | `retro` | user | Improve the environment after a build |
 | `prototype` | model or user | Throwaway code for a design question |
 | `research` | model or user | Background research into a cited notes file |

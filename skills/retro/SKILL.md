@@ -24,7 +24,7 @@ The user has asked for a **retrospective**. You are suggesting improvements to t
 
 - **Workflow skills**: did a workflow skill (grilling, to-spec, to-tickets, freeze-acceptance, implement, frozen-review, resolve-review) give a vague instruction, miss a stop condition, or produce criteria that the review could not judge? _Use when_ a review hit its round limit or the same cause repeated. Propose the exact change to that skill's `SKILL.md` in the engineering-workflow-skills repo.
 
-4. Present these candidates to the user, in order of severity.
+4. Present these candidates to the user, in order of severity. Specs and lessons about the project itself (not its environment) are not retro findings: point them to the `distill` skill, which files them in `.knowledge/`.
 
 ## Reference
 

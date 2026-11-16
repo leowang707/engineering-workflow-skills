@@ -10,6 +10,7 @@ Implement the ticket the user names (a path under `.workflow/<feature>/tickets/`
 
 - The ticket must say `**Status:** frozen`. If it is still a draft, tell the user to run `/to-tickets` (which freezes acceptance) first.
 - Every ticket it is blocked by must be done.
+- If the project has `.knowledge/INDEX.md`, read it and open the entries whose `applies-to` touches this ticket.
 - Re-read the spec and the frozen criteria. If the code has drifted so that a frozen assumption no longer holds, stop and report it.
 
 ## Boundary

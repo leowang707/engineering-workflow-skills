@@ -5,6 +5,8 @@ description: Interview the user round by round until every material decision abo
 
 Interview the user until you reach a shared understanding. Map the problem as a **design tree**: every decision branches into the decisions that hang off it.
 
+If the project has `.knowledge/INDEX.md`, read it first and open the entries that touch this plan; an active spec there is a settled fact, not a question.
+
 ## Facts are yours, decisions are the user's
 
 Finding **facts** is your job, never the user's. When a question needs a fact from the environment (code, config, docs, tools), look it up yourself, or in a sub-agent if your harness has one. Never ask the user to guess a fact. A fact you cannot verify stays marked `UNKNOWN`.
