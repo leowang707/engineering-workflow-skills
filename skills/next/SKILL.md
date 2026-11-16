@@ -1,7 +1,6 @@
 ---
 name: next
-description: Read the work saved in .workflow/ and say where the build stands and which command to run next, without running it.
-disable-model-invocation: true
+description: Read the work saved in .workflow/ and say where the build stands and which command to run next, without running it. Use when the user comes back to a project, or asks "where was I", "what's next", "做到哪了", "下一步是什麼".
 ---
 
 Tell the user where their work stands and the one command to run next. Read files only; do not run the next step, change any file, or start a review.

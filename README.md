@@ -60,19 +60,19 @@ Each step ends with a `Next:` line telling you what to run after it, and `/next`
 
 **User-invoked** (you type them):
 
-- [`workflow`](skills/workflow/SKILL.md): map of the skills and which one fits now.
-- [`next`](skills/next/SKILL.md): read `.workflow/` and say where the work stands and which command to run next.
 - [`to-spec`](skills/to-spec/SKILL.md): turn settled decisions into a spec with numbered, falsifiable requirements.
 - [`to-tickets`](skills/to-tickets/SKILL.md): split a spec into tracer-bullet tickets and freeze their acceptance criteria.
 - [`implement`](skills/implement/SKILL.md): build one frozen ticket test-first, inside its boundary, then review it.
 - [`implement-spec`](skills/implement-spec/SKILL.md): build every ticket of a spec in parallel with sub-agents on one integration branch.
-- [`distill`](skills/distill/SKILL.md): judge which specs and lessons are worth keeping and file them as structured entries in `.knowledge/`; read that folder before planning or building.
 - [`retro`](skills/retro/SKILL.md): after a build, suggest changes to checks, standards and these skills.
-- [`handoff`](skills/handoff/SKILL.md): write a handoff file for the next session or tool.
 - [`new-skill`](skills/new-skill/SKILL.md): add a new skill to this repo.
 
 **Model-invoked** (the agent can also reach for them):
 
+- [`workflow`](skills/workflow/SKILL.md): map of the skills and which one fits now.
+- [`next`](skills/next/SKILL.md): read `.workflow/` and say where the work stands and which command to run next.
+- [`handoff`](skills/handoff/SKILL.md): write a handoff file for the next session or tool.
+- [`distill`](skills/distill/SKILL.md): judge which specs and lessons are worth keeping and file them as structured entries in `.knowledge/`; read that folder before planning or building.
 - [`grilling`](skills/grilling/SKILL.md): settle decisions round by round; facts are looked up, decisions are asked.
 - [`freeze-acceptance`](skills/freeze-acceptance/SKILL.md): independently check tickets and lock their acceptance criteria.
 - [`tdd`](skills/tdd/SKILL.md): red-green loop at agreed seams.

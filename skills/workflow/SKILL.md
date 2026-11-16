@@ -1,7 +1,6 @@
 ---
 name: workflow
-description: Show which skill or flow fits what you are doing. A map of every skill in this workflow.
-disable-model-invocation: true
+description: Show which skill or flow fits what you are doing, from a map of every skill in this workflow. Use when the user asks which skill or command to use, how the workflow goes, or says "該用哪個 skill", "流程是什麼".
 ---
 
 # Workflow map
@@ -65,7 +64,7 @@ Each step also appends a line to `progress.md` as it finishes, so progress is sa
 
 | Skill | Invoked by | Purpose |
 |---|---|---|
-| `workflow` | user | This map |
+| `workflow` | model or user | This map |
 | `grilling` | model or user | Settle decisions round by round |
 | `to-spec` | user | Write the spec |
 | `to-tickets` | user | Split into tickets and freeze acceptance |
@@ -82,6 +81,6 @@ Each step also appends a line to `progress.md` as it finishes, so progress is sa
 | `research` | model or user | Background research into a cited notes file |
 | `writing-for-agents` | model or user | How to write skills and agent docs |
 | `diagnosing-bugs` | model or user | Feedback-loop-first debugging |
-| `handoff` | user | Handoff document for the next session |
-| `next` | user | Where the work stands and the command to run next |
+| `handoff` | model or user | Handoff document for the next session |
+| `next` | model or user | Where the work stands and the command to run next |
 | `new-skill` | user | Add a skill to this workflow |
